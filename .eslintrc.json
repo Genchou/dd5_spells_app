@@ -1,0 +1,84 @@
+{
+  "env": {
+    "es2021": true,
+    "node": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:react/jsx-runtime",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:react-hooks/recommended",
+    "plugin:prettier/recommended",
+    "prettier"
+  ],
+  "overrides": [],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "module",
+    "ecmaFeatures": { "jsx": true }
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
+  "plugins": ["react", "@typescript-eslint", "prettier"],
+  "rules": {
+    "linebreak-style": ["error", "unix"],
+    "quotes": ["error", "single"],
+    "semi": ["error", "always"],
+
+    // Base
+    "array-bracket-spacing": ["error", "never"],
+    "array-callback-return": "error",
+    "arrow-parens": ["warn", "always"],
+    "arrow-spacing": "error",
+    "brace-style": ["error", "1tbs", { "allowSingleLine": false }],
+    "consistent-return": "error",
+    "eqeqeq": "error",
+    "jsx-quotes": ["error", "prefer-double"],
+    "max-len": ["warn", { "code": 120, "ignoreComments": true }],
+    "no-confusing-arrow": "error",
+    "no-const-assign": "error",
+    "no-else-return": "error",
+    "no-multiple-empty-lines": "error",
+    "no-trailing-spaces": "error",
+    "no-undef-init": "error",
+    "no-var": "error",
+    "object-curly-spacing": ["error", "always"],
+    "object-shorthand": ["error", "properties"],
+    "prefer-arrow-callback": "error",
+    "prefer-const": "error",
+    "prefer-destructuring": ["error", { "object": true, "array": true }],
+    "prefer-template": "error",
+    "curly": "error",
+    "require-await": "error",
+
+    // React rules
+    "react/prefer-stateless-function": [1],
+    "react/destructuring-assignment": [1, "always"],
+    "react/jsx-tag-spacing": [
+      2,
+      {
+        "closingSlash": "never",
+        "beforeSelfClosing": "always",
+        "afterOpening": "never",
+        "beforeClosing": "never"
+      }
+    ],
+    "react/jsx-sort-props": [
+      2,
+      {
+        "callbacksLast": true,
+        "shorthandFirst": true,
+        "multiline": "last",
+        "ignoreCase": true,
+        "reservedFirst": true
+      }
+    ],
+    // Prettier
+    "prettier/prettier": "error"
+  }
+}
