@@ -1,15 +1,7 @@
-import { FC, ReactNode, useCallback } from 'react';
-import {
-  ActivityIndicator,
-  Pressable,
-  PressableAndroidRippleConfig,
-  StyleSheet,
-  TextStyle,
-  useColorScheme,
-  ViewStyle,
-} from 'react-native';
-import { Text } from './Themed';
 import { Colors } from '@/constants/Colors';
+import { FC, ReactNode, useCallback } from 'react';
+import { ActivityIndicator, Pressable, StyleSheet, TextStyle, useColorScheme, ViewStyle } from 'react-native';
+import { Text } from './Themed';
 
 type ButtonVariant = 'filled' | 'outlined' | 'ghost';
 type ButtonSize = 'sm' | 'md' | 'lg';

@@ -1,14 +1,16 @@
-import React from 'react';
+import { zincColors } from '@/constants/Colors';
+import { Layout } from '@/constants/Layout';
+import { FontAwesome, Ionicons } from '@expo/vector-icons';
+import React, { useCallback, useRef } from 'react';
 import {
-  StyleSheet,
   TextInput as RNTextInput,
   TextInputProps as RNTextInputProps,
+  StyleSheet,
   TextStyle,
   useColorScheme,
   View,
   ViewStyle,
 } from 'react-native';
-import { zincColors } from '@/constants/Colors';
 import { Text } from './Themed';
 
 type InputVariant = 'default' | 'filled' | 'outlined' | 'ghost';
@@ -22,6 +24,7 @@ interface TextInputProps extends Omit<RNTextInputProps, 'style'> {
   containerStyle?: ViewStyle;
   inputStyle?: TextStyle;
   disabled?: boolean;
+  onSearchClear?: () => void;
 }
 
 export const TextInput: React.FC<TextInputProps> = ({
@@ -32,10 +35,13 @@ export const TextInput: React.FC<TextInputProps> = ({
   containerStyle,
   inputStyle,
   disabled = false,
+  onSearchClear,
   ...props
 }) => {
   const colorScheme = useColorScheme();
   const isDark = colorScheme === 'dark';
+
+  const inputRef = useRef<RNTextInput>(null);
 
   const sizeStyles: Record<InputSize, { height?: number; fontSize: number; padding: number }> = {
     sm: { fontSize: 16, padding: 8 },
@@ -45,6 +51,10 @@ export const TextInput: React.FC<TextInputProps> = ({
 
   const getVariantStyle = () => {
     const baseStyle: ViewStyle = {
+      flex: 1,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'flex-start',
       borderRadius: 12,
       backgroundColor: isDark ? zincColors[900] : 'rgb(229, 229, 234)',
     };
@@ -78,24 +88,53 @@ export const TextInput: React.FC<TextInputProps> = ({
     return isDark ? zincColors[50] : zincColors[900];
   };
 
+  const onSearchClearPress = useCallback(() => {
+    inputRef.current?.clear();
+    if (onSearchClear) {
+      onSearchClear();
+    }
+  }, [onSearchClear]);
+
   return (
     <View style={[styles.container, containerStyle]}>
       {label && <Text style={styles.label}>{label}</Text>}
-      <View style={[getVariantStyle(), disabled && styles.disabled]}>
-        <RNTextInput
-          editable={!disabled}
-          placeholderTextColor={isDark ? zincColors[500] : zincColors[400]}
-          style={[
-            {
-              height: sizeStyles[size].height,
-              fontSize: sizeStyles[size].fontSize,
-              padding: sizeStyles[size].padding,
-              color: getTextColor(),
-            },
-            inputStyle,
-          ]}
-          {...props}
-        />
+      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start' }}>
+        <View style={[getVariantStyle(), disabled && styles.disabled]}>
+          <FontAwesome
+            color={getTextColor()}
+            name="search"
+            size={16}
+            style={{
+              paddingLeft: sizeStyles[size].padding,
+              paddingVertical: sizeStyles[size].padding,
+            }}
+          />
+          <RNTextInput
+            ref={inputRef}
+            editable={!disabled}
+            placeholderTextColor={isDark ? zincColors[500] : zincColors[400]}
+            style={[
+              {
+                flex: 1,
+                height: sizeStyles[size].height,
+                fontSize: sizeStyles[size].fontSize,
+                padding: sizeStyles[size].padding,
+                color: getTextColor(),
+              },
+              inputStyle,
+            ]}
+            {...props}
+          />
+          {props.value?.length ? (
+            <Ionicons
+              color={getTextColor()}
+              name="close"
+              size={16}
+              style={{ paddingRight: Layout.padding }}
+              onPress={onSearchClearPress}
+            />
+          ) : null}
+        </View>
       </View>
       {error && <Text style={styles.error}>{error}</Text>}
     </View>

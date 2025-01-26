@@ -7,6 +7,7 @@ import { SpellListItem } from './SpellListItem';
 import { Text, View } from './Themed';
 import { Layout } from '@/constants/Layout';
 import TextInput from './TextInput';
+import { SearchBar } from './SearchBar';
 
 interface SpellListProps {
   spells: (string | Spell)[];
@@ -69,6 +70,9 @@ export const SpellList: FC<SpellListProps> = ({ spells, preparedSpells, onSpellL
       }}
       ListHeaderComponent={
         <TextInput
+          autoCapitalize="none"
+          autoComplete="off"
+          autoCorrect={false}
           placeholder="Search"
           value={search}
           variant="filled"
@@ -77,6 +81,7 @@ export const SpellList: FC<SpellListProps> = ({ spells, preparedSpells, onSpellL
             paddingHorizontal: Layout.padding / 2,
           }}
           onChangeText={setSearch}
+          onSearchClear={() => setSearch('')}
         />
       }
     />

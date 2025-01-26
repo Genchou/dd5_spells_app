@@ -1,11 +1,12 @@
-import { Button } from '@/components/Button';
 import { Text, View } from '@/components/Themed';
+import { Layout } from '@/constants/Layout';
 import useSpells from '@/hooks/useSpells';
 import { store } from '@/state/store';
 import { use$ } from '@legendapp/state/react';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useCallback, useMemo } from 'react';
 import { StyleSheet } from 'react-native';
+import { Button } from 'react-native-paper';
 
 export default function SpellScreen() {
   const { slug } = useLocalSearchParams();
@@ -37,6 +38,7 @@ export default function SpellScreen() {
         flex: 1,
         justifyContent: 'flex-start',
         alignContent: 'center',
+        paddingHorizontal: Layout.padding,
       }}
     >
       <Stack.Screen
@@ -44,12 +46,6 @@ export default function SpellScreen() {
           title: spell?.name ?? 'Spell',
         }}
       />
-      <Text>Spell screen</Text>
-      <View darkColor="rgba(255,255,255,0.1)" lightColor="#eee" style={styles.separator} />
-
-      <Text>{spell.name}</Text>
-      <View darkColor="rgba(255,255,255,0.1)" lightColor="#eee" style={styles.separator} />
-
       <Text>Level {spell.level}</Text>
       <View darkColor="rgba(255,255,255,0.1)" lightColor="#eee" style={styles.separator} />
 
@@ -67,7 +63,9 @@ export default function SpellScreen() {
 
       <Text>{spell.description}</Text>
 
-      <Button onPress={onPrepare}>{isPrepared ? 'Remove' : 'Prepare'}</Button>
+      <Button mode="elevated" onPress={onPrepare}>
+        {isPrepared ? 'Remove' : 'Prepare'}
+      </Button>
     </View>
   );
 }
