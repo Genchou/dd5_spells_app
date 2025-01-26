@@ -13,10 +13,16 @@ interface Store {
   shortRest: () => void;
   resetSpells: () => void;
   selectedClass: CharacterClass | 'all';
+  selectClass: (selected: CharacterClass | 'all') => void;
+  sourceColor: string | undefined;
+  useDefaultTheme: boolean;
 }
 
 export const store = observable<Store>({
   selectedClass: 'all',
+  selectClass: (selected: CharacterClass | 'all') => {
+    store.selectedClass.set(selected);
+  },
   preparedSpells: [],
   resetSpells: () => {
     store.preparedSpells.set([]);
@@ -32,6 +38,8 @@ export const store = observable<Store>({
   useSpell: (spell: Spell) => console.log('Using spell', spell.slug),
   longRest: () => null,
   shortRest: () => null,
+  sourceColor: undefined,
+  useDefaultTheme: true,
 });
 
 const persistOptions = configureSynced({

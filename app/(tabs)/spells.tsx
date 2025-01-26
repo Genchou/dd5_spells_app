@@ -6,7 +6,6 @@ import { store } from '@/state/store';
 import { CharacterClass } from '@/types/character-class.type';
 import { Spell } from '@/types/spell.type';
 import { sectionSpellsByLevel } from '@/utils';
-import { observable } from '@legendapp/state';
 import { use$ } from '@legendapp/state/react';
 import { impactAsync, ImpactFeedbackStyle } from 'expo-haptics';
 import { router } from 'expo-router';
@@ -16,11 +15,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function SpellsScreen() {
   const [showMenu, setShowMenu] = useState(false);
-  // const [selectedClass, setSelectedClass] = useState<CharacterClass | 'all'>('all');
-  const selectedClass = observable(store.selectedClass);
   const [search, setSearch] = useState<string>('');
-  const spells = useSpells(selectedClass.get());
-  const { prepareSpell, preparedSpells } = use$(store);
+  const { prepareSpell, preparedSpells, selectedClass } = use$(store);
+  const spells = useSpells(selectedClass);
 
   const list = useMemo(() => {
     return sectionSpellsByLevel(spells);
@@ -52,13 +49,10 @@ export default function SpellsScreen() {
     [prepareSpell]
   );
 
-  const onClassSelect = useCallback(
-    (classSelect: CharacterClass | 'all') => {
-      selectedClass.set(classSelect);
-      setShowMenu(false);
-    },
-    [selectedClass]
-  );
+  const onClassSelect = useCallback((classSelect: CharacterClass | 'all') => {
+    store.selectedClass.set(classSelect);
+    setShowMenu(false);
+  }, []);
 
   return (
     <SafeAreaView
@@ -73,11 +67,11 @@ export default function SpellsScreen() {
           alignItems: 'center',
 
           paddingTop: Layout.padding / 2,
-          paddingRight: Layout.padding / 2,
+          paddingRight: Layout.padding,
         }}
       >
         <Button icon="chevron-down" mode="text" onPress={() => setShowMenu(true)}>
-          {selectedClass.get().substring(0, 1).toUpperCase() + selectedClass.get().substring(1)}
+          {selectedClass.substring(0, 1).toUpperCase() + selectedClass.substring(1)}
         </Button>
         <Menu anchor={{ x: 10, y: 80 }} anchorPosition="bottom" visible={showMenu} onDismiss={() => setShowMenu(false)}>
           <Menu.Item title="Bard" onPress={() => onClassSelect('bard')} />
@@ -94,7 +88,7 @@ export default function SpellsScreen() {
         <Searchbar
           mode="bar"
           placeholder="Search"
-          style={{ maxWidth: Layout.width * 0.6 }}
+          style={{ maxWidth: Layout.width * 0.65 }}
           value={search}
           onChangeText={setSearch}
         />

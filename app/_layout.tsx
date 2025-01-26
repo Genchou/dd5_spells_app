@@ -3,18 +3,14 @@ import { useColorScheme } from '@/components/useColorScheme';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useMaterial3Theme } from '@pchmn/expo-material3-theme';
-import {
-  DarkTheme as NavigationDarkTheme,
-  DefaultTheme as NavigationDefaultTheme,
-  ThemeProvider,
-} from '@react-navigation/native';
+import { DarkTheme as NavigationDarkTheme, DefaultTheme as NavigationDefaultTheme } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
 import * as NavigationBar from 'expo-navigation-bar';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
-import { adaptNavigationTheme, MD3DarkTheme, MD3LightTheme, PaperProvider } from 'react-native-paper';
+import { adaptNavigationTheme, MD3DarkTheme, MD3LightTheme } from 'react-native-paper';
 import 'react-native-reanimated';
 
 export {
@@ -46,13 +42,6 @@ export default function RootLayout() {
     materialDark: { ...MD3DarkTheme, colors: theme.dark },
     materialLight: { ...MD3LightTheme, colors: theme.light },
   });
-
-  useEffect(() => {
-    console.log('nav default', NavigationDefaultTheme);
-    console.log('nav', LightTheme);
-    console.log('m3', MD3LightTheme);
-    console.log('myou', theme.light);
-  }, [LightTheme, theme.light]);
 
   // Expo Router uses Error Boundaries to catch errors in the navigation tree.
   useEffect(() => {
