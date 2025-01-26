@@ -1,36 +1,34 @@
-import { Colors } from '@/constants/Colors';
 import { Spell } from '@/types/spell.type';
-import { useMaterial3Theme } from '@pchmn/expo-material3-theme';
 import { FlashList } from '@shopify/flash-list';
-import { FC, useCallback, useMemo, useState } from 'react';
-import { useColorScheme } from 'react-native';
-import { Divider, List } from 'react-native-paper';
+import { FC, useCallback } from 'react';
+import { Button, Divider, List, Text } from 'react-native-paper';
+import { useAppTheme } from './Material3ThemeProvider';
+import { View } from './Themed';
+import { Layout } from '@/constants/Layout';
+import { Link } from 'expo-router';
 
 interface SpellListProps {
   spells: (string | Spell)[];
   preparedSpells?: Spell[];
+  showDuration?: boolean;
+  showRange?: boolean;
+  showCastingTime?: boolean;
+  showComponents?: boolean;
   onSpellPress?: (spell: Spell) => void;
   onSpellLongPress?: (spell: Spell) => void;
 }
 
-export const SpellList: FC<SpellListProps> = ({ spells, preparedSpells, onSpellLongPress, onSpellPress }) => {
-  const colorScheme = useColorScheme();
-  const { theme } = useMaterial3Theme();
-  const [search, setSearch] = useState<string>('');
-
-  const searchResult = useMemo(() => {
-    if (search?.length) {
-      const normalizedSearch = search.toLowerCase().trim();
-      return spells.filter((spell: Spell | string) => {
-        if (typeof spell === 'string') {
-          return true;
-        }
-        const normalizedSpell = spell.name.toLowerCase().trim();
-        return normalizedSpell.includes(normalizedSearch);
-      });
-    }
-    return spells;
-  }, [search, spells]);
+export const SpellList: FC<SpellListProps> = ({
+  spells,
+  preparedSpells,
+  onSpellLongPress,
+  onSpellPress,
+  showDuration,
+  showRange,
+  showCastingTime,
+  showComponents,
+}) => {
+  const theme = useAppTheme();
 
   const renderItem = useCallback(
     ({ item }: { item: Spell | string }) => {
@@ -43,8 +41,14 @@ export const SpellList: FC<SpellListProps> = ({ spells, preparedSpells, onSpellL
         );
       }
       const isPrepared = !!preparedSpells?.find((s) => s.name === item.name);
+      const castingTime = showCastingTime ? `${item.casting_time}, ` : '';
+      const duration = showDuration ? `${item.duration}, ` : '';
+      const range = showRange ? `${item.range}, ` : '';
+      const components = showComponents ? `${item.components}, ` : '';
+      const descr = `${castingTime}${duration}${range}${components}`;
       return (
         <List.Item
+          description={descr.substring(0, descr.length - 2)}
           style={{ backgroundColor: 'transparent' }}
           title={item.name}
           titleStyle={{
@@ -56,22 +60,39 @@ export const SpellList: FC<SpellListProps> = ({ spells, preparedSpells, onSpellL
         />
       );
     },
-    [onSpellLongPress, onSpellPress, preparedSpells]
+    [onSpellLongPress, onSpellPress, preparedSpells, showCastingTime, showComponents, showDuration, showRange]
   );
 
   return (
     <FlashList
-      data={searchResult}
+      data={spells}
       extraData={preparedSpells}
       renderItem={renderItem}
       contentContainerStyle={{
         paddingBottom: 40,
-        backgroundColor: theme[colorScheme ?? 'light'].background,
+        backgroundColor: theme.colors.background,
       }}
       getItemType={(item) => {
         // To achieve better performance, specify the type based on the item
         return typeof item === 'string' ? 'sectionHeader' : 'row';
       }}
+      ListEmptyComponent={
+        <View
+          style={{
+            paddingTop: Layout.height / 3,
+            paddingHorizontal: Layout.padding * 4,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <Text style={{ textAlign: 'center', paddingBottom: Layout.padding }} variant="titleSmall">
+            You have no spell prepared.
+          </Text>
+          <Link asChild href="/spells">
+            <Button mode="contained-tonal">Go to spells list</Button>
+          </Link>
+        </View>
+      }
     />
   );
 };

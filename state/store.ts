@@ -3,6 +3,7 @@ import { observable } from '@legendapp/state';
 import { configureSynced, syncObservable } from '@legendapp/state/sync';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { observablePersistAsyncStorage } from '@legendapp/state/persist-plugins/async-storage';
+import { CharacterClass } from '@/types/character-class.type';
 
 interface Store {
   preparedSpells: Spell[];
@@ -10,10 +11,16 @@ interface Store {
   useSpell: (spell: Spell) => void;
   longRest: () => void;
   shortRest: () => void;
+  resetSpells: () => void;
+  selectedClass: CharacterClass | 'all';
 }
 
 export const store = observable<Store>({
+  selectedClass: 'all',
   preparedSpells: [],
+  resetSpells: () => {
+    store.preparedSpells.set([]);
+  },
   prepareSpell: (spell: Spell) => {
     const filteredList = store.preparedSpells.get().filter((s) => s.slug !== spell.slug);
     if (filteredList.length === store.preparedSpells.length) {

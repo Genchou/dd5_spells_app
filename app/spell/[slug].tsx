@@ -6,8 +6,9 @@ import { use$ } from '@legendapp/state/react';
 import { useMaterial3Theme } from '@pchmn/expo-material3-theme';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useCallback, useEffect, useMemo } from 'react';
-import { StyleSheet, useColorScheme } from 'react-native';
-import { Button, Divider, Text } from 'react-native-paper';
+import { ScrollView, StyleSheet, useColorScheme } from 'react-native';
+import { Button, Divider, FAB, Text } from 'react-native-paper';
+import RenderHTML, { HTMLSource } from 'react-native-render-html';
 
 export default function SpellScreen() {
   const colorScheme = useColorScheme();
@@ -41,85 +42,91 @@ export default function SpellScreen() {
   }
 
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: 'flex-start',
-        alignContent: 'center',
-        paddingHorizontal: Layout.padding,
-      }}
-    >
-      <Stack.Screen
-        options={{
-          // statusBarBackgroundColor: theme.surfaceContainer,
-          title: spell?.name ?? 'Spell',
+    <View style={{ flex: 1 }}>
+      <ScrollView
+        contentContainerStyle={{
+          justifyContent: 'flex-start',
+          alignContent: 'center',
+          paddingHorizontal: Layout.padding,
+          paddingBottom: Layout.padding * 5,
         }}
+      >
+        <Stack.Screen
+          options={{
+            // statusBarBackgroundColor: theme.surfaceContainer,
+            title: spell?.name ?? 'Spell',
+          }}
+        />
+
+        <View style={styles.infoContainer}>
+          <Text style={{ color: theme.primary }} variant="titleSmall">
+            Level
+          </Text>
+          <Text variant="titleMedium">{spell.level}</Text>
+        </View>
+
+        <Divider />
+
+        <View style={styles.infoContainer}>
+          <Text style={{ color: theme.primary }} variant="titleSmall">
+            Casting time
+          </Text>
+          <Text variant="titleMedium">{spell.casting_time}</Text>
+        </View>
+
+        <Divider />
+
+        <View style={styles.infoContainer}>
+          <Text style={{ color: theme.primary }} variant="titleSmall">
+            Range
+          </Text>
+          <Text variant="titleMedium">{spell.range}</Text>
+        </View>
+
+        <Divider />
+
+        <View style={styles.infoContainer}>
+          <Text style={{ color: theme.primary }} variant="titleSmall">
+            Components
+          </Text>
+          <Text variant="titleMedium">{spell.components}</Text>
+        </View>
+
+        <Divider />
+
+        <View style={styles.infoContainer}>
+          <Text style={{ color: theme.primary }} variant="titleSmall">
+            Duration
+          </Text>
+          <Text variant="titleMedium">{spell.duration}</Text>
+        </View>
+
+        <Divider />
+
+        <View style={styles.infoContainer}>
+          <RenderHTML
+            contentWidth={Layout.width}
+            defaultTextProps={{
+              style: {
+                fontFamily: 'Inter_400Regular',
+                color: theme.onSurface,
+                fontSize: 14.5,
+                lineHeight: 20,
+              },
+            }}
+            source={{
+              html: spell.description,
+            }}
+          />
+        </View>
+
+        <View style={{ flex: 1 }} />
+      </ScrollView>
+      <FAB
+        icon={isPrepared ? 'minus' : 'plus'}
+        style={{ position: 'absolute', bottom: Layout.padding, right: Layout.padding }}
+        onPress={onPrepare}
       />
-
-      <View style={styles.infoContainer}>
-        <Text style={{ color: theme.primary }} variant="titleMedium">
-          Level
-        </Text>
-        <Text style={{ paddingLeft: Layout.padding }} variant="bodyMedium">
-          {spell.level}
-        </Text>
-      </View>
-
-      <Divider />
-
-      <View style={styles.infoContainer}>
-        <Text style={{ color: theme.primary }} variant="titleMedium">
-          Casting time
-        </Text>
-        <Text style={{ paddingLeft: Layout.padding }} variant="bodyMedium">
-          {spell.casting_time}
-        </Text>
-      </View>
-
-      <Divider />
-
-      <View style={styles.infoContainer}>
-        <Text style={{ color: theme.primary }} variant="titleMedium">
-          Range
-        </Text>
-        <Text style={{ paddingLeft: Layout.padding }} variant="bodyMedium">
-          {spell.range}
-        </Text>
-      </View>
-
-      <Divider />
-
-      <View style={styles.infoContainer}>
-        <Text style={{ color: theme.primary }} variant="titleMedium">
-          Components
-        </Text>
-        <Text style={{ paddingLeft: Layout.padding }} variant="bodyMedium">
-          {spell.components}
-        </Text>
-      </View>
-
-      <Divider />
-
-      <View style={styles.infoContainer}>
-        <Text style={{ color: theme.primary }} variant="titleMedium">
-          Duration
-        </Text>
-        <Text style={{ paddingLeft: Layout.padding }} variant="bodyMedium">
-          {spell.duration}
-        </Text>
-      </View>
-
-      <Divider />
-
-      <View style={styles.infoContainer}>
-        <Text variant="bodyMedium">{spell.description}</Text>
-      </View>
-
-      <View style={{ flex: 1 }} />
-
-      <Button mode="elevated" style={{ marginBottom: Layout.padding }} onPress={onPrepare}>
-        {isPrepared ? 'Remove' : 'Prepare'}
-      </Button>
     </View>
   );
 }
@@ -132,8 +139,8 @@ const styles = StyleSheet.create({
   },
   infoContainer: {
     paddingVertical: Layout.padding / 2,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
   },
 });

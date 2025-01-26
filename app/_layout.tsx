@@ -1,3 +1,4 @@
+import { Material3ThemeProvider } from '@/components/Material3ThemeProvider';
 import { useColorScheme } from '@/components/useColorScheme';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -75,37 +76,22 @@ export default function RootLayout() {
   }
 
   return (
-    <PaperProvider
-      theme={
-        colorScheme === 'dark' ? { ...MD3DarkTheme, colors: theme.dark } : { ...MD3LightTheme, colors: theme.light }
-      }
-    >
-      <ThemeProvider
-        value={
-          colorScheme === 'dark'
-            ? {
-                ...DarkTheme,
-                fonts: { ...NavigationDarkTheme.fonts },
-              }
-            : { ...LightTheme, fonts: { ...NavigationDefaultTheme.fonts } }
-        }
-      >
-        <Stack>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen
-            name="spell/[slug]"
-            options={{
-              title: 'Spell info',
-              presentation: 'modal',
-            }}
-          />
-          <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
-        </Stack>
-        <StatusBar
-          backgroundColor={theme[colorScheme ?? 'light'].background}
-          style={colorScheme === 'dark' ? 'light' : 'auto'}
+    <Material3ThemeProvider>
+      <Stack>
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen
+          name="spell/[slug]"
+          options={{
+            title: 'Spell info',
+            presentation: 'modal',
+          }}
         />
-      </ThemeProvider>
-    </PaperProvider>
+        <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
+      </Stack>
+      <StatusBar
+        backgroundColor={theme[colorScheme ?? 'light'].background}
+        style={colorScheme === 'dark' ? 'light' : 'auto'}
+      />
+    </Material3ThemeProvider>
   );
 }
