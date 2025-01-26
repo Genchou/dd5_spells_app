@@ -1,12 +1,11 @@
-import { FC } from 'react';
-import { Text, View } from './Themed';
-import { Spell } from '@/types/spell.type';
-import { Button } from './Button';
-import { Link, router } from 'expo-router';
-import { Animated, Pressable, useColorScheme } from 'react-native';
-import { Layout } from '@/constants/Layout';
 import { Colors, zincColors } from '@/constants/Colors';
+import { Layout } from '@/constants/Layout';
+import { Spell } from '@/types/spell.type';
 import { Ionicons } from '@expo/vector-icons';
+import { FC } from 'react';
+import { Animated, Pressable, useColorScheme } from 'react-native';
+import { View } from './Themed';
+import { Text } from 'react-native-paper';
 
 interface SpellListItemProps {
   onPress?: () => void;

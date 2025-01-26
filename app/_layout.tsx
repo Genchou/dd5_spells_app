@@ -1,9 +1,8 @@
 import { useColorScheme } from '@/components/useColorScheme';
-import { Colors } from '@/constants/Colors';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { useMaterial3Theme } from '@pchmn/expo-material3-theme';
 import {
-  NavigationContainer,
   DarkTheme as NavigationDarkTheme,
   DefaultTheme as NavigationDefaultTheme,
   ThemeProvider,
@@ -30,18 +29,29 @@ export const unstable_settings = {
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
-const { LightTheme, DarkTheme } = adaptNavigationTheme({
-  reactNavigationLight: NavigationDefaultTheme,
-  reactNavigationDark: NavigationDarkTheme,
-});
-
 export default function RootLayout() {
   const colorScheme = useColorScheme();
+  const { theme } = useMaterial3Theme();
+
   const [loaded, error] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
     ...FontAwesome.font,
     ...Ionicons.font,
   });
+
+  const { LightTheme, DarkTheme } = adaptNavigationTheme({
+    reactNavigationLight: NavigationDefaultTheme,
+    reactNavigationDark: NavigationDarkTheme,
+    materialDark: { ...MD3DarkTheme, colors: theme.dark },
+    materialLight: { ...MD3LightTheme, colors: theme.light },
+  });
+
+  useEffect(() => {
+    console.log('nav default', NavigationDefaultTheme);
+    console.log('nav', LightTheme);
+    console.log('m3', MD3LightTheme);
+    console.log('myou', theme.light);
+  }, [LightTheme, theme.light]);
 
   // Expo Router uses Error Boundaries to catch errors in the navigation tree.
   useEffect(() => {
@@ -57,15 +67,19 @@ export default function RootLayout() {
   }, [loaded]);
 
   useEffect(() => {
-    NavigationBar.setBackgroundColorAsync(Colors[colorScheme ?? 'light'].background);
-  }, [colorScheme]);
+    NavigationBar.setBackgroundColorAsync(colorScheme === 'dark' ? DarkTheme.colors.card : LightTheme.colors.card);
+  }, [DarkTheme.colors.card, LightTheme.colors.card, colorScheme]);
 
   if (!loaded) {
     return null;
   }
 
   return (
-    <PaperProvider>
+    <PaperProvider
+      theme={
+        colorScheme === 'dark' ? { ...MD3DarkTheme, colors: theme.dark } : { ...MD3LightTheme, colors: theme.light }
+      }
+    >
       <ThemeProvider
         value={
           colorScheme === 'dark'
@@ -87,7 +101,10 @@ export default function RootLayout() {
           />
           <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
         </Stack>
-        <StatusBar backgroundColor={Colors[colorScheme ?? 'light'].background} style="auto" />
+        <StatusBar
+          backgroundColor={theme[colorScheme ?? 'light'].background}
+          style={colorScheme === 'dark' ? 'light' : 'auto'}
+        />
       </ThemeProvider>
     </PaperProvider>
   );

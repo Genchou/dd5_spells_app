@@ -1,13 +1,10 @@
-import { Colors, zincColors } from '@/constants/Colors';
+import { Colors } from '@/constants/Colors';
 import { Spell } from '@/types/spell.type';
+import { useMaterial3Theme } from '@pchmn/expo-material3-theme';
 import { FlashList } from '@shopify/flash-list';
 import { FC, useCallback, useMemo, useState } from 'react';
 import { useColorScheme } from 'react-native';
-import { SpellListItem } from './SpellListItem';
-import { Text, View } from './Themed';
-import { Layout } from '@/constants/Layout';
-import TextInput from './TextInput';
-import { SearchBar } from './SearchBar';
+import { Divider, List } from 'react-native-paper';
 
 interface SpellListProps {
   spells: (string | Spell)[];
@@ -18,6 +15,7 @@ interface SpellListProps {
 
 export const SpellList: FC<SpellListProps> = ({ spells, preparedSpells, onSpellLongPress, onSpellPress }) => {
   const colorScheme = useColorScheme();
+  const { theme } = useMaterial3Theme();
   const [search, setSearch] = useState<string>('');
 
   const searchResult = useMemo(() => {
@@ -38,15 +36,21 @@ export const SpellList: FC<SpellListProps> = ({ spells, preparedSpells, onSpellL
     ({ item }: { item: Spell | string }) => {
       if (typeof item === 'string') {
         return (
-          <View style={{ paddingVertical: Layout.padding / 1.5, paddingHorizontal: Layout.padding }}>
-            <Text>Level {item}</Text>
-          </View>
+          <List.Section>
+            <List.Subheader>Level {item}</List.Subheader>
+            <Divider />
+          </List.Section>
         );
       }
+      const isPrepared = !!preparedSpells?.find((s) => s.name === item.name);
       return (
-        <SpellListItem
-          prepared={!!preparedSpells?.find((s) => s.name === item.name)}
-          spell={item}
+        <List.Item
+          style={{ backgroundColor: 'transparent' }}
+          title={item.name}
+          titleStyle={{
+            fontWeight: isPrepared ? '700' : 'normal',
+            fontStyle: isPrepared ? 'italic' : 'normal',
+          }}
           onLongPress={onSpellLongPress ? () => onSpellLongPress(item) : undefined}
           onPress={onSpellPress ? () => onSpellPress(item) : undefined}
         />
@@ -61,29 +65,13 @@ export const SpellList: FC<SpellListProps> = ({ spells, preparedSpells, onSpellL
       extraData={preparedSpells}
       renderItem={renderItem}
       contentContainerStyle={{
-        paddingVertical: 40,
-        backgroundColor: Colors[colorScheme ?? 'light'].background,
+        paddingBottom: 40,
+        backgroundColor: theme[colorScheme ?? 'light'].background,
       }}
       getItemType={(item) => {
         // To achieve better performance, specify the type based on the item
         return typeof item === 'string' ? 'sectionHeader' : 'row';
       }}
-      ListHeaderComponent={
-        <TextInput
-          autoCapitalize="none"
-          autoComplete="off"
-          autoCorrect={false}
-          placeholder="Search"
-          value={search}
-          variant="filled"
-          containerStyle={{
-            paddingVertical: Layout.padding / 4,
-            paddingHorizontal: Layout.padding / 2,
-          }}
-          onChangeText={setSearch}
-          onSearchClear={() => setSearch('')}
-        />
-      }
     />
   );
 };

@@ -1,16 +1,20 @@
-import { Text, View } from '@/components/Themed';
+import { View } from '@/components/Themed';
 import { Layout } from '@/constants/Layout';
 import useSpells from '@/hooks/useSpells';
 import { store } from '@/state/store';
 import { use$ } from '@legendapp/state/react';
+import { useMaterial3Theme } from '@pchmn/expo-material3-theme';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
-import { useCallback, useMemo } from 'react';
-import { StyleSheet } from 'react-native';
-import { Button } from 'react-native-paper';
+import { useCallback, useEffect, useMemo } from 'react';
+import { StyleSheet, useColorScheme } from 'react-native';
+import { Button, Divider, Text } from 'react-native-paper';
 
 export default function SpellScreen() {
+  const colorScheme = useColorScheme();
+  const { theme: m3Theme } = useMaterial3Theme();
+  const theme = m3Theme[colorScheme ?? 'light'];
   const { slug } = useLocalSearchParams();
-  const spells = useSpells('druid');
+  const spells = useSpells('all');
 
   const { preparedSpells, prepareSpell } = use$(store);
 
@@ -23,6 +27,10 @@ export default function SpellScreen() {
     }
     router.back();
   }, [prepareSpell, spell]);
+
+  useEffect(() => {
+    // setBackgroundColorAsync(theme.background);
+  }, [theme]);
 
   if (!spell) {
     return (
@@ -43,27 +51,73 @@ export default function SpellScreen() {
     >
       <Stack.Screen
         options={{
+          // statusBarBackgroundColor: theme.surfaceContainer,
           title: spell?.name ?? 'Spell',
         }}
       />
-      <Text>Level {spell.level}</Text>
-      <View darkColor="rgba(255,255,255,0.1)" lightColor="#eee" style={styles.separator} />
 
-      <Text>{spell.casting_time}</Text>
-      <View darkColor="rgba(255,255,255,0.1)" lightColor="#eee" style={styles.separator} />
+      <View style={styles.infoContainer}>
+        <Text style={{ color: theme.primary }} variant="titleMedium">
+          Level
+        </Text>
+        <Text style={{ paddingLeft: Layout.padding }} variant="bodyMedium">
+          {spell.level}
+        </Text>
+      </View>
 
-      <Text>{spell.range}</Text>
-      <View darkColor="rgba(255,255,255,0.1)" lightColor="#eee" style={styles.separator} />
+      <Divider />
 
-      <Text>{spell.components}</Text>
-      <View darkColor="rgba(255,255,255,0.1)" lightColor="#eee" style={styles.separator} />
+      <View style={styles.infoContainer}>
+        <Text style={{ color: theme.primary }} variant="titleMedium">
+          Casting time
+        </Text>
+        <Text style={{ paddingLeft: Layout.padding }} variant="bodyMedium">
+          {spell.casting_time}
+        </Text>
+      </View>
 
-      <Text>{spell.duration}</Text>
-      <View darkColor="rgba(255,255,255,0.1)" lightColor="#eee" style={styles.separator} />
+      <Divider />
 
-      <Text>{spell.description}</Text>
+      <View style={styles.infoContainer}>
+        <Text style={{ color: theme.primary }} variant="titleMedium">
+          Range
+        </Text>
+        <Text style={{ paddingLeft: Layout.padding }} variant="bodyMedium">
+          {spell.range}
+        </Text>
+      </View>
 
-      <Button mode="elevated" onPress={onPrepare}>
+      <Divider />
+
+      <View style={styles.infoContainer}>
+        <Text style={{ color: theme.primary }} variant="titleMedium">
+          Components
+        </Text>
+        <Text style={{ paddingLeft: Layout.padding }} variant="bodyMedium">
+          {spell.components}
+        </Text>
+      </View>
+
+      <Divider />
+
+      <View style={styles.infoContainer}>
+        <Text style={{ color: theme.primary }} variant="titleMedium">
+          Duration
+        </Text>
+        <Text style={{ paddingLeft: Layout.padding }} variant="bodyMedium">
+          {spell.duration}
+        </Text>
+      </View>
+
+      <Divider />
+
+      <View style={styles.infoContainer}>
+        <Text variant="bodyMedium">{spell.description}</Text>
+      </View>
+
+      <View style={{ flex: 1 }} />
+
+      <Button mode="elevated" style={{ marginBottom: Layout.padding }} onPress={onPrepare}>
         {isPrepared ? 'Remove' : 'Prepare'}
       </Button>
     </View>
@@ -75,5 +129,11 @@ const styles = StyleSheet.create({
     marginVertical: 3,
     height: 1,
     width: '80%',
+  },
+  infoContainer: {
+    paddingVertical: Layout.padding / 2,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
 });
