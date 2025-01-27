@@ -6,6 +6,7 @@ import { useAppTheme } from './Material3ThemeProvider';
 import { View } from './Themed';
 import { Layout } from '@/constants/Layout';
 import { Link } from 'expo-router';
+import { MaterialIcons } from '@expo/vector-icons';
 
 interface SpellListProps {
   spells: (string | Spell)[];
@@ -49,18 +50,18 @@ export const SpellList: FC<SpellListProps> = ({
       return (
         <List.Item
           description={descr.substring(0, descr.length - 2)}
-          style={{ backgroundColor: 'transparent' }}
+          left={() => <List.Icon color={isPrepared ? theme.colors.primary : 'transparent'} icon="bookmark" />}
+          style={{ backgroundColor: 'transparent', paddingLeft: 12 }}
           title={item.name}
           titleStyle={{
             fontWeight: isPrepared ? '700' : 'normal',
-            fontStyle: isPrepared ? 'italic' : 'normal',
           }}
           onLongPress={onSpellLongPress ? () => onSpellLongPress(item) : undefined}
           onPress={onSpellPress ? () => onSpellPress(item) : undefined}
         />
       );
     },
-    [onSpellLongPress, onSpellPress, preparedSpells, showCastingTime, showComponents, showDuration, showRange]
+    [onSpellLongPress, onSpellPress, preparedSpells, showCastingTime, showComponents, showDuration, showRange, theme]
   );
 
   return (
