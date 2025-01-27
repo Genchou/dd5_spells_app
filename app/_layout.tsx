@@ -82,7 +82,6 @@ export default function RootLayout() {
             name="spell/[slug]"
             options={{
               title: 'Spell info',
-              presentation: 'modal',
             }}
           />
           <Stack.Screen name="modal" options={{ presentation: 'modal' }} />

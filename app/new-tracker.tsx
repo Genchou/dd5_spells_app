@@ -1,4 +1,3 @@
-import { useAppTheme } from '@/components/Material3ThemeProvider';
 import { View } from '@/components/Themed';
 import { Layout } from '@/constants/Layout';
 import { store } from '@/state/store';
@@ -6,11 +5,11 @@ import { Tracker } from '@/types/tracker.type';
 import { use$ } from '@legendapp/state/react';
 import { router } from 'expo-router';
 import { useState } from 'react';
+import { KeyboardAvoidingView } from 'react-native';
 import { Button, HelperText, SegmentedButtons, Text, TextInput } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function NewTrackerScreen() {
-  const theme = useAppTheme();
   const { addTracker } = use$(store);
   const [name, setName] = useState('');
   const [maxValue, setMaxValue] = useState('');
@@ -48,9 +47,8 @@ export default function NewTrackerScreen() {
     <SafeAreaView style={{ flex: 1 }}>
       <View
         style={{
-          flex: 1,
+          justifyContent: 'flex-start',
           marginHorizontal: Layout.padding,
-          marginTop: Layout.padding,
           marginBottom: Layout.padding,
         }}
       >
@@ -98,10 +96,11 @@ export default function NewTrackerScreen() {
           </Text>
         </View>
 
-        <View style={{ flex: 1 }} />
-        <Button mode="contained-tonal" onPress={onSave}>
-          Save
-        </Button>
+        <KeyboardAvoidingView behavior="height" style={{ paddingTop: Layout.padding }}>
+          <Button mode="contained-tonal" onPress={onSave}>
+            Save
+          </Button>
+        </KeyboardAvoidingView>
       </View>
     </SafeAreaView>
   );

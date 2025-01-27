@@ -5,6 +5,7 @@ import { store } from '@/state/store';
 import { Tracker } from '@/types/tracker.type';
 import { use$ } from '@legendapp/state/react';
 import { router } from 'expo-router';
+import { useCallback } from 'react';
 import { Button, FAB } from 'react-native-paper';
 import ReorderableList, { reorderItems } from 'react-native-reorderable-list';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -12,30 +13,63 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 export default function TrackersScreen() {
   const { trackers } = use$(store);
 
-  const onShortRest = () => {
-    const newTrackers = [...trackers];
-    newTrackers.forEach((t) => {
-      if (t.restoreWhen === 'short') {
-        t.value = t.maxValue;
-      }
+  const onShortRest = useCallback(() => {
+    store.trackers.set((prev) => {
+      return prev.map((t) => ({
+        ...t,
+        value: t.restoreWhen === 'short' ? t.maxValue : t.value,
+      }));
     });
-    store.trackers.set(newTrackers);
-  };
+  }, []);
 
-  const onLongRest = () => {
-    const newTrackers = trackers.map((t) => ({ ...t, value: t.restoreWhen !== 'manual' ? t.maxValue : t.value }));
-    store.trackers.set(newTrackers);
-  };
+  const onLongRest = useCallback(() => {
+    store.trackers.set((prev) =>
+      prev.map((t) => ({
+        ...t,
+        value: t.restoreWhen !== 'manual' ? t.maxValue : t.value,
+      }))
+    );
+  }, []);
 
-  const onRestore = (tracker: Tracker) => {
-    const newTrackers = [...trackers];
-    newTrackers.forEach((t) => {
-      if (t.id === tracker.id) {
-        t.value = t.maxValue;
-      }
+  const onUse = useCallback((tracker: Tracker) => {
+    store.trackers.set((prev) => {
+      return prev.map((t) => ({
+        ...t,
+        value: t.id === tracker.id && t.value > 0 ? t.value - 1 : t.value,
+      }));
     });
-    store.trackers.set(newTrackers);
-  };
+  }, []);
+
+  const onRestore = useCallback(
+    (tracker: Tracker) => {
+      const newTrackers = [...trackers];
+      newTrackers.forEach((t) => {
+        if (t.id === tracker.id) {
+          t.value = t.maxValue;
+        }
+      });
+      store.trackers.set(newTrackers);
+    },
+    [trackers]
+  );
+
+  const onReorder = useCallback(({ from, to }: { from: number; to: number }) => {
+    store.trackers.set((prev) => reorderItems(prev, from, to));
+  }, []);
+
+  const renderItem = useCallback(
+    ({ item, index }: { item: Tracker; index: number }) => {
+      return (
+        <TrackerCard
+          tracker={item}
+          onDelete={() => store.trackers.set((prev) => prev.filter((t) => t.id !== item.id))}
+          onRestore={() => onRestore(item)}
+          onUse={() => onUse(item, index)}
+        />
+      );
+    },
+    [onRestore, onUse]
+  );
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -62,30 +96,11 @@ export default function TrackersScreen() {
         contentContainerStyle={{ paddingVertical: Layout.padding }}
         data={trackers}
         keyExtractor={(item) => item.id}
+        renderItem={renderItem}
         cellAnimations={{
           opacity: 1,
         }}
-        renderItem={({ item, index }) => (
-          <TrackerCard
-            tracker={item}
-            onDelete={() => store.trackers.set((prev) => prev.filter((t) => t.id !== item.id))}
-            onRestore={() => onRestore(item)}
-            onUse={() =>
-              store.trackers.set((prev) => {
-                const newTrackers = [...prev];
-                const current = {
-                  ...item,
-                  value: item.value > 0 ? item.value - 1 : 0,
-                };
-                newTrackers.splice(index, 1, current);
-                return newTrackers;
-              })
-            }
-          />
-        )}
-        onReorder={({ from, to }) => {
-          store.trackers.set((prev) => reorderItems(prev, from, to));
-        }}
+        onReorder={onReorder}
       />
 
       <FAB

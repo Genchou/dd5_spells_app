@@ -107,7 +107,7 @@ export default function SpellsScreen() {
         <Searchbar
           mode="bar"
           placeholder="Search"
-          style={{ maxWidth: Layout.width * 0.65 }}
+          style={{ width: Layout.width * 0.65 }}
           value={search}
           onChangeText={setSearch}
         />

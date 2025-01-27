@@ -54,7 +54,6 @@ export default function SpellScreen() {
       >
         <Stack.Screen
           options={{
-            // statusBarBackgroundColor: theme.surfaceContainer,
             title: spell?.name ?? 'Spell',
           }}
         />
