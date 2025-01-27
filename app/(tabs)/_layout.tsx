@@ -18,6 +18,14 @@ export default function TabLayout() {
       }}
     >
       <Tabs.Screen
+        name="trackers"
+        options={{
+          title: 'Trackers',
+          tabBarIcon: ({ color }: { color: string }) => <MaterialIcons color={color} name="track-changes" size={18} />,
+        }}
+      />
+
+      <Tabs.Screen
         name="index"
         options={{
           title: 'Prepared Spells',

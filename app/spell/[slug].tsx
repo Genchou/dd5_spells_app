@@ -1,3 +1,4 @@
+import { useAppTheme } from '@/components/Material3ThemeProvider';
 import { View } from '@/components/Themed';
 import { Layout } from '@/constants/Layout';
 import useSpells from '@/hooks/useSpells';
@@ -6,14 +7,14 @@ import { use$ } from '@legendapp/state/react';
 import { useMaterial3Theme } from '@pchmn/expo-material3-theme';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useCallback, useEffect, useMemo } from 'react';
-import { ScrollView, StyleSheet, useColorScheme } from 'react-native';
+import { Platform, ScrollView, StyleSheet, useColorScheme } from 'react-native';
 import { Button, Divider, FAB, Text } from 'react-native-paper';
 import RenderHTML, { HTMLSource } from 'react-native-render-html';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function SpellScreen() {
   const colorScheme = useColorScheme();
-  const { theme: m3Theme } = useMaterial3Theme();
-  const theme = m3Theme[colorScheme ?? 'light'];
+  const theme = useAppTheme();
   const { slug } = useLocalSearchParams();
   const spells = useSpells('all');
 
@@ -59,7 +60,7 @@ export default function SpellScreen() {
         />
 
         <View style={styles.infoContainer}>
-          <Text style={{ color: theme.primary }} variant="titleSmall">
+          <Text style={{ color: theme.colors.primary }} variant="titleSmall">
             Level
           </Text>
           <Text variant="titleMedium">{spell.level}</Text>
@@ -68,7 +69,7 @@ export default function SpellScreen() {
         <Divider />
 
         <View style={styles.infoContainer}>
-          <Text style={{ color: theme.primary }} variant="titleSmall">
+          <Text style={{ color: theme.colors.primary }} variant="titleSmall">
             Casting time
           </Text>
           <Text variant="titleMedium">{spell.casting_time}</Text>
@@ -77,7 +78,7 @@ export default function SpellScreen() {
         <Divider />
 
         <View style={styles.infoContainer}>
-          <Text style={{ color: theme.primary }} variant="titleSmall">
+          <Text style={{ color: theme.colors.primary }} variant="titleSmall">
             Range
           </Text>
           <Text variant="titleMedium">{spell.range}</Text>
@@ -86,7 +87,7 @@ export default function SpellScreen() {
         <Divider />
 
         <View style={styles.infoContainer}>
-          <Text style={{ color: theme.primary }} variant="titleSmall">
+          <Text style={{ color: theme.colors.primary }} variant="titleSmall">
             Components
           </Text>
           <Text variant="titleMedium">{spell.components}</Text>
@@ -95,7 +96,7 @@ export default function SpellScreen() {
         <Divider />
 
         <View style={styles.infoContainer}>
-          <Text style={{ color: theme.primary }} variant="titleSmall">
+          <Text style={{ color: theme.colors.primary }} variant="titleSmall">
             Duration
           </Text>
           <Text variant="titleMedium">{spell.duration}</Text>
@@ -109,7 +110,7 @@ export default function SpellScreen() {
             defaultTextProps={{
               style: {
                 fontFamily: 'Inter_400Regular',
-                color: theme.onSurface,
+                color: theme.colors.onSurface,
                 fontSize: 14.5,
                 lineHeight: 20,
               },
@@ -119,12 +120,14 @@ export default function SpellScreen() {
             }}
           />
         </View>
-
-        <View style={{ flex: 1 }} />
       </ScrollView>
       <FAB
         icon={isPrepared ? 'minus' : 'plus'}
-        style={{ position: 'absolute', bottom: Layout.padding, right: Layout.padding }}
+        style={{
+          position: 'absolute',
+          bottom: Layout.padding * 1.5,
+          right: Layout.padding,
+        }}
         onPress={onPrepare}
       />
     </View>

@@ -1,12 +1,8 @@
 import { Spell } from '@/types/spell.type';
 import { FlashList } from '@shopify/flash-list';
-import { FC, useCallback } from 'react';
-import { Button, Divider, List, Text } from 'react-native-paper';
+import { ComponentType, FC, JSXElementConstructor, ReactElement, useCallback } from 'react';
+import { Divider, List } from 'react-native-paper';
 import { useAppTheme } from './Material3ThemeProvider';
-import { View } from './Themed';
-import { Layout } from '@/constants/Layout';
-import { Link } from 'expo-router';
-import { MaterialIcons } from '@expo/vector-icons';
 
 interface SpellListProps {
   spells: (string | Spell)[];
@@ -17,6 +13,11 @@ interface SpellListProps {
   showComponents?: boolean;
   onSpellPress?: (spell: Spell) => void;
   onSpellLongPress?: (spell: Spell) => void;
+  EmptyListComponent?:
+    | ReactElement<unknown, string | JSXElementConstructor<unknown>>
+    | ComponentType<unknown>
+    | null
+    | undefined;
 }
 
 export const SpellList: FC<SpellListProps> = ({
@@ -28,6 +29,7 @@ export const SpellList: FC<SpellListProps> = ({
   showRange,
   showCastingTime,
   showComponents,
+  EmptyListComponent,
 }) => {
   const theme = useAppTheme();
 
@@ -68,6 +70,7 @@ export const SpellList: FC<SpellListProps> = ({
     <FlashList
       data={spells}
       extraData={preparedSpells}
+      ListEmptyComponent={EmptyListComponent}
       renderItem={renderItem}
       contentContainerStyle={{
         paddingBottom: 40,
@@ -77,23 +80,6 @@ export const SpellList: FC<SpellListProps> = ({
         // To achieve better performance, specify the type based on the item
         return typeof item === 'string' ? 'sectionHeader' : 'row';
       }}
-      ListEmptyComponent={
-        <View
-          style={{
-            paddingTop: Layout.height / 3,
-            paddingHorizontal: Layout.padding * 4,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
-          <Text style={{ textAlign: 'center', paddingBottom: Layout.padding }} variant="titleSmall">
-            You have no spell prepared.
-          </Text>
-          <Link asChild href="/spells">
-            <Button mode="contained-tonal">Go to spells list</Button>
-          </Link>
-        </View>
-      }
     />
   );
 };

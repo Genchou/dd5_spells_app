@@ -1,7 +1,10 @@
 import { Material3ThemeProvider } from '@/components/Material3ThemeProvider';
+import MaterialNavBar from '@/components/MaterialNavBar';
 import { useColorScheme } from '@/components/useColorScheme';
+import { store } from '@/state/store';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { use$ } from '@legendapp/state/react';
 import { useMaterial3Theme } from '@pchmn/expo-material3-theme';
 import { DarkTheme as NavigationDarkTheme, DefaultTheme as NavigationDefaultTheme } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
@@ -10,6 +13,7 @@ import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { adaptNavigationTheme, MD3DarkTheme, MD3LightTheme } from 'react-native-paper';
 import 'react-native-reanimated';
 
@@ -29,6 +33,7 @@ SplashScreen.preventAutoHideAsync();
 export default function RootLayout() {
   const colorScheme = useColorScheme();
   const { theme } = useMaterial3Theme();
+  const { sourceColor } = use$(store);
 
   const [loaded, error] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
@@ -65,22 +70,29 @@ export default function RootLayout() {
   }
 
   return (
-    <Material3ThemeProvider>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen
-          name="spell/[slug]"
-          options={{
-            title: 'Spell info',
-            presentation: 'modal',
+    <GestureHandlerRootView>
+      <Material3ThemeProvider sourceColor={sourceColor}>
+        <Stack
+          screenOptions={{
+            header: (props) => <MaterialNavBar {...props} />,
           }}
+        >
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="spell/[slug]"
+            options={{
+              title: 'Spell info',
+              presentation: 'modal',
+            }}
+          />
+          <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
+          <Stack.Screen name="new-tracker" options={{ title: 'New tracker' }} />
+        </Stack>
+        <StatusBar
+          backgroundColor={theme[colorScheme ?? 'light'].background}
+          style={colorScheme === 'dark' ? 'light' : 'auto'}
         />
-        <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
-      </Stack>
-      <StatusBar
-        backgroundColor={theme[colorScheme ?? 'light'].background}
-        style={colorScheme === 'dark' ? 'light' : 'auto'}
-      />
-    </Material3ThemeProvider>
+      </Material3ThemeProvider>
+    </GestureHandlerRootView>
   );
 }

@@ -1,6 +1,5 @@
 import { PropsWithChildren } from 'react';
-import { ViewStyle } from 'react-native';
-import { View } from './Themed';
+import { View, ViewStyle } from 'react-native';
 
 interface FlexProps {
   direction?: 'row' | 'column';

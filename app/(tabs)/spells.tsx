@@ -10,7 +10,7 @@ import { use$ } from '@legendapp/state/react';
 import { impactAsync, ImpactFeedbackStyle } from 'expo-haptics';
 import { router } from 'expo-router';
 import { useCallback, useMemo, useState } from 'react';
-import { Button, Menu, Searchbar } from 'react-native-paper';
+import { Button, Menu, Searchbar, Text } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function SpellsScreen() {
@@ -26,13 +26,28 @@ export default function SpellsScreen() {
   const searchResult = useMemo(() => {
     if (search?.length) {
       const normalizedSearch = search.toLowerCase().trim();
-      return list.filter((spell: Spell | string) => {
-        if (typeof spell === 'string') {
-          return true;
-        }
-        const normalizedSpell = spell.name.toLowerCase().trim();
-        return normalizedSpell.includes(normalizedSearch);
-      });
+      return list
+        .filter((spell: Spell | string) => {
+          if (typeof spell === 'string') {
+            return true;
+          }
+          const normalizedSpell = spell.name.toLowerCase().trim();
+          return normalizedSpell.includes(normalizedSearch);
+        })
+        .reduceRight((acc: (Spell | string)[], curr) => {
+          if (typeof curr === 'string') {
+            if (acc.length) {
+              const last: string | Spell = acc[acc.length - 1];
+              if (typeof last !== 'string' && last.level === curr) {
+                acc.push(curr);
+              }
+            }
+          } else {
+            acc.push(curr);
+          }
+          return acc;
+        }, [])
+        .toReversed();
     }
     return list;
   }, [search, list]);
@@ -52,6 +67,10 @@ export default function SpellsScreen() {
   const onClassSelect = useCallback((classSelect: CharacterClass | 'all') => {
     store.selectedClass.set(classSelect);
     setShowMenu(false);
+  }, []);
+
+  const onSearchReset = useCallback(() => {
+    setSearch('');
   }, []);
 
   return (
@@ -97,6 +116,23 @@ export default function SpellsScreen() {
       <SpellList
         preparedSpells={preparedSpells}
         spells={searchResult}
+        EmptyListComponent={
+          <View
+            style={{
+              paddingTop: Layout.height / 3,
+              paddingHorizontal: Layout.padding * 4,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <Text style={{ textAlign: 'center', paddingBottom: Layout.padding }} variant="titleSmall">
+              No result found.
+            </Text>
+            <Button mode="contained-tonal" onPress={onSearchReset}>
+              Reset search
+            </Button>
+          </View>
+        }
         onSpellLongPress={onSpellLongPress}
         onSpellPress={onSpellPress}
       />

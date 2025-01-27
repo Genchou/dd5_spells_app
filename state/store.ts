@@ -1,9 +1,10 @@
+import { CharacterClass } from '@/types/character-class.type';
 import { Spell } from '@/types/spell.type';
+import { Tracker } from '@/types/tracker.type';
 import { observable } from '@legendapp/state';
+import { observablePersistAsyncStorage } from '@legendapp/state/persist-plugins/async-storage';
 import { configureSynced, syncObservable } from '@legendapp/state/sync';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { observablePersistAsyncStorage } from '@legendapp/state/persist-plugins/async-storage';
-import { CharacterClass } from '@/types/character-class.type';
 
 interface Store {
   preparedSpells: Spell[];
@@ -16,6 +17,9 @@ interface Store {
   selectClass: (selected: CharacterClass | 'all') => void;
   sourceColor: string | undefined;
   useDefaultTheme: boolean;
+  trackers: Tracker[];
+  addTracker: (tracker: Tracker) => void;
+  resetTrackers: () => void;
 }
 
 export const store = observable<Store>({
@@ -38,6 +42,12 @@ export const store = observable<Store>({
   useSpell: (spell: Spell) => console.log('Using spell', spell.slug),
   longRest: () => null,
   shortRest: () => null,
+  trackers: [],
+  addTracker: (tracker: Tracker) => {
+    const trackers = store.trackers.get();
+    store.trackers.set([...trackers, tracker]);
+  },
+  resetTrackers: () => store.trackers.set([]),
   sourceColor: undefined,
   useDefaultTheme: true,
 });

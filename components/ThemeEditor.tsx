@@ -1,30 +1,19 @@
-import { useColorScheme } from 'react-native';
-import { IconButton, Switch, Text, TouchableRipple } from 'react-native-paper';
-import { useMaterial3ThemeContext } from './Material3ThemeProvider';
-import { Flex } from './Flex';
-import { isDynamicThemeSupported } from '@pchmn/expo-material3-theme';
-import { observable } from '@legendapp/state';
+import { backgroundColors } from '@/constants/Colors';
 import { store } from '@/state/store';
-import { useEffect } from 'react';
 import { use$ } from '@legendapp/state/react';
+import { isDynamicThemeSupported } from '@pchmn/expo-material3-theme';
+import { ScrollView, useColorScheme } from 'react-native';
+import { IconButton, Switch, Text, TouchableRipple } from 'react-native-paper';
+import { Flex } from './Flex';
+import { useMaterial3ThemeContext } from './Material3ThemeProvider';
 
 const colors = [
-  {
-    light: '#FFE082',
-    dark: '#FFE082',
-  },
-  {
-    light: '#3E8260',
-    dark: '#ADF2C7',
-  },
-  {
-    light: '#756FAB',
-    dark: '#E5DFFF',
-  },
-  {
-    light: '#9F6C2C',
-    dark: '#FDDDB9',
-  },
+  ...backgroundColors
+    .filter((_, index) => (index + 1) % 8 === 0)
+    .map((color) => ({
+      light: color,
+      dark: color,
+    })),
 ];
 
 export function ThemeEditor() {
@@ -45,6 +34,8 @@ export function ThemeEditor() {
     updateTheme(color);
   };
 
+  const customDisabled = isDynamicThemeSupported && useDefaultTheme;
+
   return (
     <Flex gap={20} style={{ paddingTop: 20 }}>
       {isDynamicThemeSupported && (
@@ -56,16 +47,16 @@ export function ThemeEditor() {
 
       <Flex gap={20}>
         <Text variant="titleSmall">Select source color</Text>
-        <Flex direction="row" gap={20} justify="center">
+        <ScrollView horizontal>
           {colors.map(({ light, dark }) => {
             const color = colorScheme === 'dark' ? dark : light;
             return (
               <TouchableRipple
                 key={color}
                 borderless
-                disabled={useDefaultTheme}
+                disabled={customDisabled}
                 rippleColor="rgba(0, 0, 0, .32)"
-                style={{ height: 50, width: 50, borderRadius: 50 }}
+                style={{ height: 50, width: 50, borderRadius: 50, marginRight: 4 }}
                 onPress={() => handleSourceColorChange(color)}
               >
                 <Flex
@@ -76,7 +67,7 @@ export function ThemeEditor() {
                     height: 50,
                     width: 50,
                     borderRadius: 50,
-                    opacity: useDefaultTheme ? 0.5 : 1,
+                    opacity: customDisabled ? 0.5 : 1,
                   }}
                 >
                   {sourceColor && [light, dark].includes(sourceColor) && (
@@ -86,7 +77,7 @@ export function ThemeEditor() {
               </TouchableRipple>
             );
           })}
-        </Flex>
+        </ScrollView>
       </Flex>
     </Flex>
   );
