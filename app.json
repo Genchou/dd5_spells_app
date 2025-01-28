@@ -18,10 +18,10 @@
       "bundleIdentifier": "be.gvonh.dd5-spells"
     },
     "android": {
-      // "adaptiveIcon": {
-      //   "foregroundImage": "./assets/images/adaptive-icon.png",
-      //   "backgroundColor": "#ffffff"
-      // },
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/whatever.png",
+        "backgroundColor": "#ffffff"
+      },
       "userInterfaceStyle": "automatic",
       "package": "be.gvonh.dd5_spells"
     },
