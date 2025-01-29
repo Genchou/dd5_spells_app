@@ -89,9 +89,9 @@ export default function NewTrackerScreen() {
           onValueChange={(value: 'short' | 'long' | 'manual') => setRestoreWhen(value)}
         />
         <View style={{ paddingHorizontal: Layout.padding / 2, paddingTop: Layout.padding / 2 }}>
-          <Text variant="labelMedium">How value is restored.</Text>
           <Text variant="labelMedium">
-            Manual requires you to manually restore the value, short and long rests restore the rest.
+            Manual requires you to manually restore the tracker, while short/long rest will be restored on a rest. Long
+            rests will always restore short and long rest trackers.
           </Text>
         </View>
 

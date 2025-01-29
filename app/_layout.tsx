@@ -82,9 +82,10 @@ export default function RootLayout() {
             name="spell/[slug]"
             options={{
               title: 'Spell info',
+              presentation: 'modal',
             }}
           />
-          <Stack.Screen name="new-tracker" options={{ title: 'New tracker' }} />
+          <Stack.Screen name="new-tracker" options={{ title: 'New tracker', presentation: 'modal' }} />
         </Stack>
         <StatusBar
           backgroundColor={theme[colorScheme ?? 'light'].background}

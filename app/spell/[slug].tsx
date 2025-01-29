@@ -8,7 +8,7 @@ import { use$ } from '@legendapp/state/react';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useCallback, useEffect, useMemo } from 'react';
 import { Linking, ScrollView, StyleSheet } from 'react-native';
-import { Button, Chip, Divider, FAB, Text } from 'react-native-paper';
+import { Appbar, Button, Chip, Divider, FAB, Text } from 'react-native-paper';
 import RenderHTML from 'react-native-render-html';
 
 export default function SpellScreen() {
@@ -157,7 +157,7 @@ export default function SpellScreen() {
         </View>
       </ScrollView>
       <FAB
-        icon={isPrepared ? 'minus' : 'plus'}
+        icon={isPrepared ? 'bookmark' : 'bookmark-outline'}
         style={{
           position: 'absolute',
           bottom: Layout.padding * 1.5,
