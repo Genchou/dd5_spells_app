@@ -53,9 +53,14 @@ export const SpellList: FC<SpellListProps> = ({
       return (
         <List.Item
           description={descr.substring(0, descr.length - 2)}
-          left={() => <List.Icon color={isPrepared ? theme.colors.primary : 'transparent'} icon="bookmark" />}
           style={{ backgroundColor: 'transparent', paddingLeft: 12 }}
           title={item.name}
+          left={() => (
+            <List.Icon
+              color={isPrepared ? theme.colors.primary : theme.colors.surfaceDim}
+              icon={isPrepared ? 'bookmark' : 'bookmark-outline'}
+            />
+          )}
           titleStyle={{
             fontWeight: isPrepared ? '700' : 'normal',
           }}

@@ -7,7 +7,7 @@ import { store } from '@/state/store';
 import { use$ } from '@legendapp/state/react';
 import { useCallback, useState } from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
-import { Button, Checkbox, Dialog, Portal, Snackbar, Switch, Text, TouchableRipple } from 'react-native-paper';
+import { Button, Checkbox, Dialog, Divider, Portal, Snackbar, Switch, Text, TouchableRipple } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function SettingsScreen() {
@@ -37,29 +37,31 @@ export default function SettingsScreen() {
   }, [clearSpells, clearTrackers, onResetDialogDismiss, resetSpells, resetTrackers]);
 
   return (
-    <SafeAreaView style={{ flex: 1, paddingHorizontal: Layout.padding }}>
-      <ScrollView>
-        <Flex direction="row" justify="space-between" style={{ paddingTop: Layout.padding }}>
-          <Text variant="titleSmall">Hide older spell version if a newer one exists.</Text>
-          <Switch value={hideOlderSpells} onValueChange={() => store.hideOlderSpells.set((prev) => !prev)} />
+    <SafeAreaView style={{ flex: 1 }}>
+      <ScrollView contentContainerStyle={{ paddingTop: Layout.padding * 4 }}>
+        <Flex style={{ marginHorizontal: Layout.padding * 2 }}>
+          <Text variant="titleLarge">App settings</Text>
+          <Flex align="center" direction="row" justify="space-between" style={{ marginTop: Layout.padding }}>
+            <Text variant="titleSmall">Hide older spell version if a newer one exists.</Text>
+            <Switch value={hideOlderSpells} onValueChange={() => store.hideOlderSpells.set((prev) => !prev)} />
+          </Flex>
         </Flex>
 
-        <View style={{ paddingTop: Layout.padding }}>
-          <Text variant="titleLarge">Theme</Text>
+        <Flex style={{ marginTop: Layout.padding }}>
+          <Text style={{ marginLeft: Layout.padding * 2 }} variant="titleLarge">
+            Theme
+          </Text>
           <ThemeEditor />
-        </View>
+        </Flex>
 
-        <View style={{ paddingTop: Layout.padding * 2 }}>
-          <Button mode="contained-tonal" onPress={() => setShowResetWarning(true)}>
-            Clear data
-          </Button>
-        </View>
-
-        <View style={{ paddingTop: Layout.padding * 2 }}>
-          <Button mode="contained-tonal" onPress={() => setShowThemeColors(true)}>
-            Show theme values
-          </Button>
-        </View>
+        <Flex style={{ marginTop: Layout.padding, marginHorizontal: Layout.padding * 2 }}>
+          <Text variant="titleLarge">Misc</Text>
+          <Flex style={{ paddingTop: Layout.padding }}>
+            <Button mode="contained-tonal" onPress={() => setShowResetWarning(true)}>
+              Clear data
+            </Button>
+          </Flex>
+        </Flex>
       </ScrollView>
 
       <Portal>
