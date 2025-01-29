@@ -88,6 +88,12 @@ export default function NewTrackerScreen() {
           ]}
           onValueChange={(value: 'short' | 'long' | 'manual') => setRestoreWhen(value)}
         />
+        <View style={{ paddingHorizontal: Layout.padding / 2, paddingTop: Layout.padding / 2 }}>
+          <Text variant="labelMedium">
+            Manual requires you to manually restore the tracker, while short/long rest will be restored on a rest. Long
+            rests will always restore short and long rest trackers.
+          </Text>
+        </View>
 
         <KeyboardAvoidingView behavior="height" style={{ paddingTop: Layout.padding }}>
           <Button mode="contained-tonal" onPress={onSave}>
