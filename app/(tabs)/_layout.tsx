@@ -1,8 +1,5 @@
 import { useAppTheme } from '@/components/Material3ThemeProvider';
-import { useColorScheme } from '@/components/useColorScheme';
-import { Colors } from '@/constants/Colors';
 import { MaterialIcons } from '@expo/vector-icons';
-import { color } from '@rneui/base';
 import { withLayoutContext } from 'expo-router';
 import { createMaterialBottomTabNavigator } from 'react-native-paper/react-navigation';
 

@@ -58,13 +58,13 @@ export default function TrackersScreen() {
   }, []);
 
   const renderItem = useCallback(
-    ({ item, index }: { item: Tracker; index: number }) => {
+    ({ item }: { item: Tracker; index: number }) => {
       return (
         <TrackerCard
           tracker={item}
           onDelete={() => store.trackers.set((prev) => prev.filter((t) => t.id !== item.id))}
           onRestore={() => onRestore(item)}
-          onUse={() => onUse(item, index)}
+          onUse={() => onUse(item)}
         />
       );
     },

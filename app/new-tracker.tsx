@@ -28,7 +28,6 @@ export default function NewTrackerScreen() {
     if (!maxValue?.length || +maxValue <= 0) {
       err[1] = 'Max value required and must be higher than 0';
     }
-    console.log(errors);
     setErrors(err);
     if (err.filter((e) => !!e).length === 0) {
       const tracker: Tracker = {
