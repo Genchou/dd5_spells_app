@@ -84,7 +84,6 @@ export default function RootLayout() {
               title: 'Spell info',
             }}
           />
-          <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
           <Stack.Screen name="new-tracker" options={{ title: 'New tracker' }} />
         </Stack>
         <StatusBar
