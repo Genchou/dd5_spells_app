@@ -7,8 +7,8 @@ import { use$ } from '@legendapp/state/react';
 import { useMaterial3Theme } from '@pchmn/expo-material3-theme';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useCallback, useEffect, useMemo } from 'react';
-import { Platform, ScrollView, StyleSheet, useColorScheme } from 'react-native';
-import { Button, Divider, FAB, Text } from 'react-native-paper';
+import { Linking, Platform, ScrollView, StyleSheet, useColorScheme } from 'react-native';
+import { Button, Chip, Divider, FAB, Text } from 'react-native-paper';
 import RenderHTML, { HTMLSource } from 'react-native-render-html';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -16,7 +16,7 @@ export default function SpellScreen() {
   const colorScheme = useColorScheme();
   const theme = useAppTheme();
   const { slug } = useLocalSearchParams();
-  const spells = useSpells('all');
+  const spells = useSpells('all', false);
 
   const { preparedSpells, prepareSpell } = use$(store);
 
@@ -118,6 +118,40 @@ export default function SpellScreen() {
               html: spell.description,
             }}
           />
+        </View>
+
+        <Divider />
+
+        <View style={styles.infoContainer}>
+          <Text style={{ color: theme.colors.primary }} variant="titleSmall">
+            Classes
+          </Text>
+          {spell.classes.map((c, index) => (
+            <Chip key={index}>{c}</Chip>
+          ))}
+        </View>
+
+        <View style={styles.infoContainer}>
+          <Text style={{ color: theme.colors.primary }} variant="titleSmall">
+            Source
+          </Text>
+          <Text variant="titleMedium">{spell.source}</Text>
+        </View>
+
+        <View style={styles.infoContainer}>
+          <Text style={{ color: theme.colors.primary }} variant="titleSmall">
+            Version
+          </Text>
+          <Text variant="titleMedium">{spell.version}</Text>
+        </View>
+
+        <View style={styles.infoContainer}>
+          <Text style={{ color: theme.colors.primary }} variant="titleSmall">
+            Link
+          </Text>
+          <Button mode="text" onPress={() => Linking.openURL(spell.link)}>
+            {spell.link}
+          </Button>
         </View>
       </ScrollView>
       <FAB
