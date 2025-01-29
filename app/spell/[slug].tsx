@@ -1,22 +1,20 @@
+import { Flex } from '@/components/Flex';
 import { useAppTheme } from '@/components/Material3ThemeProvider';
 import { View } from '@/components/Themed';
 import { Layout } from '@/constants/Layout';
 import useSpells from '@/hooks/useSpells';
 import { store } from '@/state/store';
 import { use$ } from '@legendapp/state/react';
-import { useMaterial3Theme } from '@pchmn/expo-material3-theme';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useCallback, useEffect, useMemo } from 'react';
-import { Platform, ScrollView, StyleSheet, useColorScheme } from 'react-native';
-import { Button, Divider, FAB, Text } from 'react-native-paper';
-import RenderHTML, { HTMLSource } from 'react-native-render-html';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Linking, ScrollView, StyleSheet } from 'react-native';
+import { Button, Chip, Divider, FAB, Text } from 'react-native-paper';
+import RenderHTML from 'react-native-render-html';
 
 export default function SpellScreen() {
-  const colorScheme = useColorScheme();
   const theme = useAppTheme();
   const { slug } = useLocalSearchParams();
-  const spells = useSpells('all');
+  const spells = useSpells('all', false);
 
   const { preparedSpells, prepareSpell } = use$(store);
 
@@ -118,6 +116,44 @@ export default function SpellScreen() {
               html: spell.description,
             }}
           />
+        </View>
+
+        <Divider />
+
+        <View style={styles.infoContainer}>
+          <Text style={{ color: theme.colors.primary }} variant="titleSmall">
+            Classes
+          </Text>
+          <Flex direction="row" wrap="wrap">
+            {spell.classes.map((c, index) => (
+              <Chip key={index} style={{ marginLeft: Layout.padding / 4, marginTop: 4 }}>
+                {c}
+              </Chip>
+            ))}
+          </Flex>
+        </View>
+
+        <View style={styles.infoContainer}>
+          <Text style={{ color: theme.colors.primary }} variant="titleSmall">
+            Source
+          </Text>
+          <Text variant="titleMedium">{spell.source}</Text>
+        </View>
+
+        <View style={styles.infoContainer}>
+          <Text style={{ color: theme.colors.primary }} variant="titleSmall">
+            Version
+          </Text>
+          <Text variant="titleMedium">{spell.version}</Text>
+        </View>
+
+        <View style={styles.infoContainer}>
+          <Text style={{ color: theme.colors.primary }} variant="titleSmall">
+            Link
+          </Text>
+          <Button mode="text" onPress={() => Linking.openURL(spell.link)}>
+            {spell.link}
+          </Button>
         </View>
       </ScrollView>
       <FAB

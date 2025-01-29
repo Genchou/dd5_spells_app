@@ -1,7 +1,7 @@
 import { Colors } from '@/constants/Colors';
 import { FC, ReactNode, useCallback } from 'react';
 import { ActivityIndicator, Pressable, StyleSheet, TextStyle, useColorScheme, ViewStyle } from 'react-native';
-import { Text } from './Themed';
+import { Text } from 'react-native-paper';
 
 type ButtonVariant = 'filled' | 'outlined' | 'ghost';
 type ButtonSize = 'sm' | 'md' | 'lg';

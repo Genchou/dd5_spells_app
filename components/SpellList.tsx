@@ -43,18 +43,24 @@ export const SpellList: FC<SpellListProps> = ({
           </List.Section>
         );
       }
-      const isPrepared = !!preparedSpells?.find((s) => s.name === item.name);
+      const version = `(${item.version})  `;
+      const isPrepared = !!preparedSpells?.find((s) => s.slug === item.slug);
       const castingTime = showCastingTime ? `${item.casting_time}, ` : '';
       const duration = showDuration ? `${item.duration}, ` : '';
       const range = showRange ? `${item.range}, ` : '';
       const components = showComponents ? `${item.components}, ` : '';
-      const descr = `${castingTime}${duration}${range}${components}`;
+      const descr = `${version}${castingTime}${duration}${range}${components}`;
       return (
         <List.Item
           description={descr.substring(0, descr.length - 2)}
-          left={() => <List.Icon color={isPrepared ? theme.colors.primary : 'transparent'} icon="bookmark" />}
           style={{ backgroundColor: 'transparent', paddingLeft: 12 }}
           title={item.name}
+          left={() => (
+            <List.Icon
+              color={isPrepared ? theme.colors.primary : theme.colors.surfaceDim}
+              icon={isPrepared ? 'bookmark' : 'bookmark-outline'}
+            />
+          )}
           titleStyle={{
             fontWeight: isPrepared ? '700' : 'normal',
           }}
@@ -70,6 +76,7 @@ export const SpellList: FC<SpellListProps> = ({
     <FlashList
       data={spells}
       extraData={preparedSpells}
+      keyExtractor={(item: Spell | string) => (typeof item === 'string' ? `level${item}` : item.slug)}
       ListEmptyComponent={EmptyListComponent}
       renderItem={renderItem}
       contentContainerStyle={{

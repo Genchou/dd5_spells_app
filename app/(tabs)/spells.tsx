@@ -16,8 +16,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 export default function SpellsScreen() {
   const [showMenu, setShowMenu] = useState(false);
   const [search, setSearch] = useState<string>('');
-  const { prepareSpell, preparedSpells, selectedClass } = use$(store);
-  const spells = useSpells(selectedClass);
+  const { prepareSpell, preparedSpells, selectedClass, hideOlderSpells } = use$(store);
+  const spells = useSpells(selectedClass, hideOlderSpells);
 
   const list = useMemo(() => {
     return sectionSpellsByLevel(spells);
@@ -58,6 +58,7 @@ export default function SpellsScreen() {
 
   const onSpellLongPress = useCallback(
     (spell: Spell) => {
+      console.log('PREPARING', spell.slug, spell.version);
       impactAsync(ImpactFeedbackStyle.Light);
       prepareSpell(spell);
     },

@@ -1,3 +1,4 @@
+import { Flex } from '@/components/Flex';
 import { useAppTheme } from '@/components/Material3ThemeProvider';
 import { View } from '@/components/Themed';
 import { ThemeEditor } from '@/components/ThemeEditor';
@@ -5,69 +6,62 @@ import { Layout } from '@/constants/Layout';
 import { store } from '@/state/store';
 import { use$ } from '@legendapp/state/react';
 import { useCallback, useState } from 'react';
-import { Alert, ScrollView, StyleSheet } from 'react-native';
-import { Button, Dialog, Portal, Snackbar, Text, TouchableRipple } from 'react-native-paper';
+import { ScrollView, StyleSheet } from 'react-native';
+import { Button, Checkbox, Dialog, Portal, Snackbar, Switch, Text, TouchableRipple } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function SettingsScreen() {
-  const { resetSpells, resetTrackers } = use$(store);
-  const [showThemeColors, setShowThemeColors] = useState(false);
-  const [showClipboardNotif, setShowClipboardNotif] = useState(false);
   const theme = useAppTheme();
+  const { resetSpells, resetTrackers, hideOlderSpells } = use$(store);
+  const [showThemeColors, setShowThemeColors] = useState(false);
+  const [showResetWarning, setShowResetWarning] = useState(false);
+  const [clearSpells, setClearSpells] = useState(false);
+  const [clearTrackers, setClearTrackers] = useState(false);
+  const [snackbarText, setSnackbarText] = useState<string | undefined>(undefined);
 
-  const onResetSpells = useCallback(() => {
-    Alert.alert('Reset prepared spells ? ', undefined, [
-      {
-        text: 'Cancel',
-        style: 'cancel',
-      },
-      {
-        text: 'Reset',
-        onPress: resetSpells,
-        style: 'destructive',
-      },
-    ]);
-  }, [resetSpells]);
+  const onResetDialogDismiss = useCallback(() => {
+    setShowResetWarning(false);
+    setClearSpells(false);
+    setClearTrackers(false);
+  }, []);
 
-  const onResetTrackers = useCallback(() => {
-    Alert.alert('Reset prepared spells ? ', undefined, [
-      {
-        text: 'Cancel',
-        style: 'cancel',
-      },
-      {
-        text: 'Reset',
-        onPress: resetTrackers,
-        style: 'destructive',
-      },
-    ]);
-  }, [resetTrackers]);
+  const onResetData = useCallback(() => {
+    if (clearSpells) {
+      resetSpells();
+    }
+    if (clearTrackers) {
+      resetTrackers();
+    }
+    setSnackbarText('Data cleared');
+    onResetDialogDismiss();
+  }, [clearSpells, clearTrackers, onResetDialogDismiss, resetSpells, resetTrackers]);
 
   return (
-    <SafeAreaView style={{ flex: 1, paddingHorizontal: Layout.padding }}>
-      <ScrollView>
-        <View style={{ paddingTop: Layout.padding }}>
-          <Text variant="titleLarge">Theme</Text>
+    <SafeAreaView style={{ flex: 1 }}>
+      <ScrollView contentContainerStyle={{ paddingTop: Layout.padding * 4 }}>
+        <Flex style={{ marginHorizontal: Layout.padding * 2 }}>
+          <Text variant="titleLarge">App settings</Text>
+          <Flex align="center" direction="row" justify="space-between" style={{ marginTop: Layout.padding }}>
+            <Text variant="titleSmall">Hide older spell version if a newer one exists.</Text>
+            <Switch value={hideOlderSpells} onValueChange={() => store.hideOlderSpells.set((prev) => !prev)} />
+          </Flex>
+        </Flex>
+
+        <Flex style={{ marginTop: Layout.padding }}>
+          <Text style={{ marginLeft: Layout.padding * 2 }} variant="titleLarge">
+            Theme
+          </Text>
           <ThemeEditor />
-        </View>
+        </Flex>
 
-        <View style={{ paddingTop: Layout.padding * 2 }}>
-          <Button mode="contained-tonal" onPress={onResetSpells}>
-            Clear Prepared Spells
-          </Button>
-        </View>
-
-        <View style={{ paddingTop: Layout.padding * 2 }}>
-          <Button mode="contained-tonal" onPress={onResetTrackers}>
-            Clear Trackers
-          </Button>
-        </View>
-
-        <View style={{ paddingTop: Layout.padding * 2 }}>
-          <Button mode="contained-tonal" onPress={() => setShowThemeColors(true)}>
-            Show theme values
-          </Button>
-        </View>
+        <Flex style={{ marginTop: Layout.padding, marginHorizontal: Layout.padding * 2 }}>
+          <Text variant="titleLarge">Misc</Text>
+          <Flex style={{ paddingTop: Layout.padding }}>
+            <Button mode="contained-tonal" onPress={() => setShowResetWarning(true)}>
+              Clear data
+            </Button>
+          </Flex>
+        </Flex>
       </ScrollView>
 
       <Portal>
@@ -76,7 +70,7 @@ export default function SettingsScreen() {
           <Dialog.ScrollArea style={{ maxHeight: Layout.height / 2.5 }}>
             <ScrollView>
               {Object.entries(theme.colors).map(([key, value]) => (
-                <TouchableRipple key={`color-${key}`} onPress={() => setShowClipboardNotif(true)}>
+                <TouchableRipple key={`color-${key}`} onPress={() => setSnackbarText('Color copied to clipboard.')}>
                   <View
                     style={{
                       backgroundColor: 'transparent',
@@ -111,9 +105,37 @@ export default function SettingsScreen() {
       </Portal>
 
       <Portal>
-        <Snackbar duration={2000} visible={showClipboardNotif} onDismiss={() => setShowClipboardNotif(false)}>
-          Color copied to clipboard
+        <Snackbar duration={2000} visible={!!snackbarText} onDismiss={() => setSnackbarText(undefined)}>
+          {snackbarText}
         </Snackbar>
+      </Portal>
+
+      <Portal>
+        <Dialog visible={showResetWarning} onDismiss={onResetDialogDismiss}>
+          <Dialog.Content>
+            <Flex align="center" direction="row" justify="flex-start">
+              <Checkbox.Android
+                status={clearSpells ? 'checked' : 'unchecked'}
+                onPress={() => setClearSpells((prev) => !prev)}
+              />
+              <Text variant="bodyMedium">Clear Spells</Text>
+            </Flex>
+
+            <Flex align="center" direction="row" justify="flex-start">
+              <Checkbox.Android
+                status={clearTrackers ? 'checked' : 'unchecked'}
+                onPress={() => setClearTrackers((prev) => !prev)}
+              />
+              <Text variant="bodyMedium">Clear tracker</Text>
+            </Flex>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button onPress={onResetDialogDismiss}>Cancel</Button>
+            <Button disabled={!clearSpells && !clearTrackers} textColor={theme.colors.error} onPress={onResetData}>
+              Reset
+            </Button>
+          </Dialog.Actions>
+        </Dialog>
       </Portal>
     </SafeAreaView>
   );

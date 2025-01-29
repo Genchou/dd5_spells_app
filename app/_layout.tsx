@@ -1,6 +1,5 @@
 import { Material3ThemeProvider } from '@/components/Material3ThemeProvider';
 import MaterialNavBar from '@/components/MaterialNavBar';
-import { useColorScheme } from '@/components/useColorScheme';
 import { store } from '@/state/store';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -13,6 +12,7 @@ import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
+import { useColorScheme } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { adaptNavigationTheme, MD3DarkTheme, MD3LightTheme } from 'react-native-paper';
 import 'react-native-reanimated';

@@ -8,4 +8,7 @@ export type Spell = {
   duration: string;
   description: string;
   classes: string[];
+  source: string;
+  version: string;
+  link: string;
 };

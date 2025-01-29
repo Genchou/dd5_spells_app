@@ -6,6 +6,7 @@ import { ScrollView, useColorScheme } from 'react-native';
 import { IconButton, Switch, Text, TouchableRipple } from 'react-native-paper';
 import { Flex } from './Flex';
 import { useMaterial3ThemeContext } from './Material3ThemeProvider';
+import { Layout } from '@/constants/Layout';
 
 const colors = [
   ...backgroundColors
@@ -37,16 +38,18 @@ export function ThemeEditor() {
   const customDisabled = isDynamicThemeSupported && useDefaultTheme;
 
   return (
-    <Flex gap={20} style={{ paddingTop: 20 }}>
+    <Flex gap={20} style={{ paddingTop: Layout.padding }}>
       {isDynamicThemeSupported && (
-        <Flex direction="row" justify="space-between">
+        <Flex direction="row" justify="space-between" style={{ marginHorizontal: Layout.padding * 2 }}>
           <Text variant="titleSmall">Use default theme</Text>
           <Switch value={useDefaultTheme} onValueChange={handleUseDefaultThemeChange} />
         </Flex>
       )}
 
       <Flex gap={20}>
-        <Text variant="titleSmall">Select source color</Text>
+        <Text style={{ marginLeft: Layout.padding * 2 }} variant="titleSmall">
+          Select source color
+        </Text>
         <ScrollView horizontal>
           {colors.map(({ light, dark }) => {
             const color = colorScheme === 'dark' ? dark : light;

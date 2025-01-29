@@ -20,6 +20,7 @@ interface Store {
   trackers: Tracker[];
   addTracker: (tracker: Tracker) => void;
   resetTrackers: () => void;
+  hideOlderSpells: boolean;
 }
 
 export const store = observable<Store>({
@@ -50,6 +51,7 @@ export const store = observable<Store>({
   resetTrackers: () => store.trackers.set([]),
   sourceColor: undefined,
   useDefaultTheme: true,
+  hideOlderSpells: true,
 });
 
 const persistOptions = configureSynced({
