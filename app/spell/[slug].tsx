@@ -157,7 +157,7 @@ export default function SpellScreen() {
         </View>
       </ScrollView>
       <FAB
-        icon={isPrepared ? 'minus' : 'plus'}
+        icon={isPrepared ? 'bookmark' : 'bookmark-outline'}
         style={{
           position: 'absolute',
           bottom: Layout.padding * 1.5,

@@ -88,12 +88,6 @@ export default function NewTrackerScreen() {
           ]}
           onValueChange={(value: 'short' | 'long' | 'manual') => setRestoreWhen(value)}
         />
-        <View style={{ paddingHorizontal: Layout.padding / 2, paddingTop: Layout.padding / 2 }}>
-          <Text variant="labelMedium">How value is restored.</Text>
-          <Text variant="labelMedium">
-            Manual requires you to manually restore the value, short and long rests restore the rest.
-          </Text>
-        </View>
 
         <KeyboardAvoidingView behavior="height" style={{ paddingTop: Layout.padding }}>
           <Button mode="contained-tonal" onPress={onSave}>

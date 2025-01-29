@@ -84,11 +84,11 @@ export default function TrackersScreen() {
       >
         <View style={{ flex: 5 }} />
         <Button mode="contained-tonal" onPress={onShortRest}>
-          Short Rest
+          Short rest
         </Button>
         <View style={{ flex: 1 }} />
         <Button mode="contained-tonal" onPress={onLongRest}>
-          Long Rest
+          Long rest
         </Button>
       </View>
 

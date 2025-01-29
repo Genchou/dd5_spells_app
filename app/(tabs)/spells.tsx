@@ -94,6 +94,7 @@ export default function SpellsScreen() {
           {selectedClass.substring(0, 1).toUpperCase() + selectedClass.substring(1)}
         </Button>
         <Menu anchor={{ x: 10, y: 80 }} anchorPosition="bottom" visible={showMenu} onDismiss={() => setShowMenu(false)}>
+          <Menu.Item title="All" onPress={() => onClassSelect('all')} />
           <Menu.Item title="Bard" onPress={() => onClassSelect('bard')} />
           <Menu.Item title="Cleric" onPress={() => onClassSelect('cleric')} />
           <Menu.Item title="Druid" onPress={() => onClassSelect('druid')} />
@@ -102,8 +103,6 @@ export default function SpellsScreen() {
           <Menu.Item title="Sorcerer" onPress={() => onClassSelect('sorcerer')} />
           <Menu.Item title="Warlock" onPress={() => onClassSelect('warlock')} />
           <Menu.Item title="Wizard" onPress={() => onClassSelect('wizard')} />
-
-          <Menu.Item title="All" onPress={() => onClassSelect('all')} />
         </Menu>
         <Searchbar
           mode="bar"

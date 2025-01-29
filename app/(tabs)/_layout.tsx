@@ -25,7 +25,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Prepared Spells',
+          title: 'My Spells',
           tabBarIcon: ({ color }: { color: string }) => <MaterialIcons color={color} name="bookmarks" size={18} />,
         }}
       />
@@ -33,7 +33,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="spells"
         options={{
-          title: 'Spells',
+          title: 'Spells List',
           tabBarIcon: ({ color }: { color: string }) => <MaterialIcons color={color} name="library-books" size={18} />,
         }}
       />
