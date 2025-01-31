@@ -115,18 +115,17 @@ export default function SettingsScreen() {
           <Dialog.Content>
             <Flex align="center" direction="row" justify="flex-start">
               <Checkbox.Android
-                status={clearSpells ? 'checked' : 'unchecked'}
-                onPress={() => setClearSpells((prev) => !prev)}
-              />
-              <Text variant="bodyMedium">Clear Spells</Text>
-            </Flex>
-
-            <Flex align="center" direction="row" justify="flex-start">
-              <Checkbox.Android
                 status={clearTrackers ? 'checked' : 'unchecked'}
                 onPress={() => setClearTrackers((prev) => !prev)}
               />
-              <Text variant="bodyMedium">Clear tracker</Text>
+              <Text variant="bodyMedium">Clear Trackers</Text>
+            </Flex>
+            <Flex align="center" direction="row" justify="flex-start">
+              <Checkbox.Android
+                status={clearSpells ? 'checked' : 'unchecked'}
+                onPress={() => setClearSpells((prev) => !prev)}
+              />
+              <Text variant="bodyMedium">Clear My Spells</Text>
             </Flex>
           </Dialog.Content>
           <Dialog.Actions>
