@@ -94,8 +94,8 @@ export default function SpellsScreen() {
           justifyContent: 'space-between',
           alignItems: 'center',
 
-          paddingTop: Layout.padding / 2,
-          paddingRight: Layout.padding,
+          // paddingTop: Layout.padding / 2,
+          // paddingRight: Layout.padding,
         }}
       >
         <Button icon="chevron-down" mode="text" onPress={() => setShowMenu(true)}>
@@ -123,6 +123,7 @@ export default function SpellsScreen() {
 
       <SpellList
         ref={listRef}
+        sectionCollapsible
         preparedSpells={preparedSpells}
         spells={searchResult}
         EmptyListComponent={

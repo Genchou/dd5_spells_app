@@ -1,7 +1,18 @@
+import { Layout } from '@/constants/Layout';
 import { Spell } from '@/types/spell.type';
 import { FlashList } from '@shopify/flash-list';
-import { ComponentType, forwardRef, JSXElementConstructor, ReactElement, useCallback } from 'react';
-import { Divider, List } from 'react-native-paper';
+import {
+  ComponentType,
+  forwardRef,
+  JSXElementConstructor,
+  ReactElement,
+  useCallback,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
+import { List } from 'react-native-paper';
 import { useAppTheme } from './Material3ThemeProvider';
 
 interface SpellListProps {
@@ -11,6 +22,7 @@ interface SpellListProps {
   showRange?: boolean;
   showCastingTime?: boolean;
   showComponents?: boolean;
+  sectionCollapsible?: boolean;
   onSpellPress?: (spell: Spell) => void;
   onSpellLongPress?: (spell: Spell) => void;
   EmptyListComponent?:
@@ -32,19 +44,44 @@ export const SpellList = forwardRef<FlashList<Spell | string>, SpellListProps>(
       showCastingTime,
       showComponents,
       EmptyListComponent,
+      sectionCollapsible = false,
     },
     ref
   ) => {
     const theme = useAppTheme();
+    const [collapsedLevel, setCollapsedLevel] = useState<string[]>([]);
+    const innerRef = useRef<FlashList<Spell | string>>(null);
+    useImperativeHandle(ref, () => innerRef.current!, []);
+
+    const shownSpells = useMemo(() => {
+      const nonCollapsedSpells = spells.filter((s: Spell | string) => {
+        return typeof s === 'string' || !collapsedLevel.includes(s.level);
+      });
+      return nonCollapsedSpells;
+    }, [collapsedLevel, spells]);
+
+    const collapseLevel = useCallback((level: string) => {
+      setCollapsedLevel((prev) => (prev.includes(level) ? prev.filter((l) => l !== level) : [...prev, level]));
+    }, []);
+
+    const stickyHeaderIndices = shownSpells
+      .map((item, index) => {
+        return typeof item === 'string' ? index : null;
+      })
+      .filter((item) => item !== null) as number[];
 
     const renderItem = useCallback(
       ({ item }: { item: Spell | string }) => {
         if (typeof item === 'string') {
           return (
-            <List.Section>
-              <List.Subheader>Level {item}</List.Subheader>
-              <Divider />
-            </List.Section>
+            <List.Item
+              title={`Level ${item}`}
+              titleStyle={{ color: theme.colors.surfaceTint, paddingLeft: Layout.padding }}
+              style={{
+                backgroundColor: theme.colors.background,
+              }}
+              onPress={sectionCollapsible ? () => collapseLevel(item) : undefined}
+            />
           );
         }
         const version = `(${item.version})  `;
@@ -61,7 +98,7 @@ export const SpellList = forwardRef<FlashList<Spell | string>, SpellListProps>(
             title={item.name}
             left={() => (
               <List.Icon
-                color={isPrepared ? theme.colors.primary : theme.colors.surfaceDim}
+                color={isPrepared ? theme.colors.primary : 'transparent'}
                 icon={isPrepared ? 'bookmark' : 'bookmark-outline'}
               />
             )}
@@ -73,17 +110,31 @@ export const SpellList = forwardRef<FlashList<Spell | string>, SpellListProps>(
           />
         );
       },
-      [onSpellLongPress, onSpellPress, preparedSpells, showCastingTime, showComponents, showDuration, showRange, theme]
+      [
+        collapseLevel,
+        onSpellLongPress,
+        onSpellPress,
+        preparedSpells,
+        sectionCollapsible,
+        showCastingTime,
+        showComponents,
+        showDuration,
+        showRange,
+        theme.colors.background,
+        theme.colors.primary,
+        theme.colors.surfaceTint,
+      ]
     );
 
     return (
       <FlashList
-        ref={ref}
-        data={spells}
+        ref={innerRef}
+        data={shownSpells}
         extraData={preparedSpells}
         keyExtractor={(item: Spell | string) => (typeof item === 'string' ? `level${item}` : item.slug)}
         ListEmptyComponent={EmptyListComponent}
         renderItem={renderItem}
+        stickyHeaderIndices={stickyHeaderIndices}
         contentContainerStyle={{
           paddingBottom: 40,
           backgroundColor: theme.colors.background,
