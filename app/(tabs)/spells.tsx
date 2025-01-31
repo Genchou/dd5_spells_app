@@ -7,9 +7,10 @@ import { CharacterClass } from '@/types/character-class.type';
 import { Spell } from '@/types/spell.type';
 import { sectionSpellsByLevel } from '@/utils';
 import { use$ } from '@legendapp/state/react';
+import { FlashList } from '@shopify/flash-list';
 import { impactAsync, ImpactFeedbackStyle } from 'expo-haptics';
 import { router } from 'expo-router';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { Button, Menu, Searchbar, Text } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -19,9 +20,15 @@ export default function SpellsScreen() {
   const { prepareSpell, preparedSpells, selectedClass, hideOlderSpells } = use$(store);
   const spells = useSpells(selectedClass, hideOlderSpells);
 
+  const listRef = useRef<FlashList<Spell | string>>(null);
+
   const list = useMemo(() => {
     return sectionSpellsByLevel(spells);
   }, [spells]);
+
+  const scrollToTop = () => {
+    listRef.current?.scrollToIndex({ index: 0, animated: true });
+  };
 
   const searchResult = useMemo(() => {
     if (search?.length) {
@@ -58,7 +65,6 @@ export default function SpellsScreen() {
 
   const onSpellLongPress = useCallback(
     (spell: Spell) => {
-      console.log('PREPARING', spell.slug, spell.version);
       impactAsync(ImpactFeedbackStyle.Light);
       prepareSpell(spell);
     },
@@ -68,6 +74,7 @@ export default function SpellsScreen() {
   const onClassSelect = useCallback((classSelect: CharacterClass | 'all') => {
     store.selectedClass.set(classSelect);
     setShowMenu(false);
+    scrollToTop();
   }, []);
 
   const onSearchReset = useCallback(() => {
@@ -85,7 +92,6 @@ export default function SpellsScreen() {
           flexDirection: 'row',
           justifyContent: 'space-between',
           alignItems: 'center',
-
           paddingTop: Layout.padding / 2,
           paddingRight: Layout.padding,
         }}
@@ -114,6 +120,8 @@ export default function SpellsScreen() {
       </View>
 
       <SpellList
+        ref={listRef}
+        sectionCollapsible
         preparedSpells={preparedSpells}
         spells={searchResult}
         EmptyListComponent={

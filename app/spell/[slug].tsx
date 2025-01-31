@@ -8,7 +8,7 @@ import { use$ } from '@legendapp/state/react';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useCallback, useEffect, useMemo } from 'react';
 import { Linking, ScrollView, StyleSheet } from 'react-native';
-import { Appbar, Button, Chip, Divider, FAB, Text } from 'react-native-paper';
+import { Button, Chip, Divider, FAB, Text } from 'react-native-paper';
 import RenderHTML from 'react-native-render-html';
 
 export default function SpellScreen() {
