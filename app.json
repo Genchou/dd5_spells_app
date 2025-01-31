@@ -45,9 +45,6 @@
     "owner": "genchou",
     "runtimeVersion": {
       "policy": "appVersion"
-    },
-    "updates": {
-      "url": "https://u.expo.dev/9e4b385e-21c6-447f-a3db-08496457cade"
     }
   }
 }
