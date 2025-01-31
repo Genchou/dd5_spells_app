@@ -65,7 +65,6 @@ export default function SpellsScreen() {
 
   const onSpellLongPress = useCallback(
     (spell: Spell) => {
-      console.log('PREPARING', spell.slug, spell.version);
       impactAsync(ImpactFeedbackStyle.Light);
       prepareSpell(spell);
     },
