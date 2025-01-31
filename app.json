@@ -2,7 +2,7 @@
   "expo": {
     "name": "Dæëndé",
     "slug": "dd5_spells",
-    "version": "1.1.1",
+    "version": "1.1.2",
     "orientation": "portrait",
     "icon": "./assets/images/whatever.png",
     "scheme": "myapp",
