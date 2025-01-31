@@ -93,9 +93,8 @@ export default function SpellsScreen() {
           flexDirection: 'row',
           justifyContent: 'space-between',
           alignItems: 'center',
-
-          // paddingTop: Layout.padding / 2,
-          // paddingRight: Layout.padding,
+          paddingTop: Layout.padding / 2,
+          paddingRight: Layout.padding,
         }}
       >
         <Button icon="chevron-down" mode="text" onPress={() => setShowMenu(true)}>
