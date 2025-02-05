@@ -7,7 +7,7 @@ import { store } from '@/state/store';
 import { checkForUpdate, getCurrentVersion, GITHUB_REPO } from '@/utils/update';
 import { use$ } from '@legendapp/state/react';
 import { useCallback, useState } from 'react';
-import { Linking, ScrollView, StyleSheet } from 'react-native';
+import { Linking, Platform, ScrollView, StyleSheet } from 'react-native';
 import { Button, Checkbox, Dialog, Portal, Snackbar, Switch, Text, TouchableRipple } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -82,11 +82,13 @@ export default function SettingsScreen() {
             </Button>
           </Flex>
 
-          <Flex style={{ paddingTop: Layout.padding }}>
-            <Button mode="contained-tonal" onPress={onCheckUpdate}>
-              Check for update
-            </Button>
-          </Flex>
+          {Platform.OS === 'android' && (
+            <Flex style={{ paddingTop: Layout.padding }}>
+              <Button mode="contained-tonal" onPress={onCheckUpdate}>
+                Check for update
+              </Button>
+            </Flex>
+          )}
         </Flex>
 
         <Flex align="center" style={{ marginTop: Layout.padding, marginHorizontal: Layout.padding * 2 }}>
