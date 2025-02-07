@@ -1,4 +1,5 @@
 import { Flex } from '@/components/Flex';
+import { LayoutContainer } from '@/components/LayoutContainer';
 import { useAppTheme } from '@/components/Material3ThemeProvider';
 import { View } from '@/components/Themed';
 import { Layout } from '@/constants/Layout';
@@ -41,7 +42,7 @@ export default function SpellScreen() {
   }
 
   return (
-    <View style={{ flex: 1 }}>
+    <LayoutContainer>
       <ScrollView
         contentContainerStyle={{
           justifyContent: 'flex-start',
@@ -165,7 +166,7 @@ export default function SpellScreen() {
         }}
         onPress={onPrepare}
       />
-    </View>
+    </LayoutContainer>
   );
 }
 

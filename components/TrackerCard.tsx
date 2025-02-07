@@ -3,7 +3,7 @@ import { Tracker } from '@/types/tracker.type';
 import { impactAsync, ImpactFeedbackStyle } from 'expo-haptics';
 import { FC, useRef, useState } from 'react';
 import { Animated, Pressable } from 'react-native';
-import { IconButton, Menu, Surface, Text } from 'react-native-paper';
+import { Icon, IconButton, Menu, Surface, Text } from 'react-native-paper';
 import { useReorderableDrag } from 'react-native-reorderable-list';
 import { Flex } from './Flex';
 import { useAppTheme } from './Material3ThemeProvider';
@@ -16,7 +16,7 @@ interface TrackerProps {
   onRestore?: () => void;
 }
 
-export const TrackerCard: FC<TrackerProps> = ({ tracker, onUse, onDelete, onRestore }) => {
+export const TrackerCard: FC<TrackerProps> = ({ tracker, onUse, onDelete, onRestore, onEdit }) => {
   const theme = useAppTheme();
   const drag = useReorderableDrag();
   const elevation = useRef(new Animated.Value(3));
@@ -96,8 +96,17 @@ export const TrackerCard: FC<TrackerProps> = ({ tracker, onUse, onDelete, onRest
               }}
             />
             <Menu.Item
-              leadingIcon="delete-outline"
+              leadingIcon="square-edit-outline"
+              title="Edit"
+              onPress={() => {
+                onEdit && onEdit();
+                setMenuVisible(false);
+              }}
+            />
+            <Menu.Item
+              leadingIcon={() => <Icon color={theme.colors.error} size={24} source="delete-outline" />}
               title="Remove"
+              titleStyle={{ color: theme.colors.error }}
               onPress={() => {
                 onDelete && onDelete();
                 setMenuVisible(false);
