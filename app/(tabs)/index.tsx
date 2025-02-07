@@ -1,3 +1,4 @@
+import { LayoutContainer } from '@/components/LayoutContainer';
 import { SpellList } from '@/components/SpellList';
 import { View } from '@/components/Themed';
 import { Layout } from '@/constants/Layout';
@@ -7,7 +8,6 @@ import { use$ } from '@legendapp/state/react';
 import { Link, router } from 'expo-router';
 import { useMemo } from 'react';
 import { Button, Text } from 'react-native-paper';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function PreparedSpellsScreen() {
   const { preparedSpells } = use$(store);
@@ -17,9 +17,9 @@ export default function PreparedSpellsScreen() {
   }, [preparedSpells]);
 
   return (
-    <SafeAreaView
+    <LayoutContainer
+      topInset
       style={{
-        flex: 1,
         justifyContent: 'flex-start',
         alignContent: 'center',
       }}
@@ -48,6 +48,6 @@ export default function PreparedSpellsScreen() {
         }
         onSpellPress={(item) => router.navigate({ pathname: '/spell/[slug]', params: { slug: item.slug } })}
       />
-    </SafeAreaView>
+    </LayoutContainer>
   );
 }

@@ -1,5 +1,4 @@
 import { LayoutContainer } from '@/components/LayoutContainer';
-import { useAppTheme } from '@/components/Material3ThemeProvider';
 import { View } from '@/components/Themed';
 import { TrackerCard } from '@/components/TrackerCard';
 import { Layout } from '@/constants/Layout';
@@ -8,7 +7,7 @@ import { Tracker } from '@/types/tracker.type';
 import { use$ } from '@legendapp/state/react';
 import { Link, router } from 'expo-router';
 import { useCallback } from 'react';
-import { Button, FAB, Portal } from 'react-native-paper';
+import { Button, FAB } from 'react-native-paper';
 import ReorderableList, { reorderItems } from 'react-native-reorderable-list';
 
 export default function TrackersScreen() {

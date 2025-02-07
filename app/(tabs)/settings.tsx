@@ -1,4 +1,5 @@
 import { Flex } from '@/components/Flex';
+import { LayoutContainer } from '@/components/LayoutContainer';
 import { useAppTheme } from '@/components/Material3ThemeProvider';
 import { View } from '@/components/Themed';
 import { ThemeEditor } from '@/components/ThemeEditor';
@@ -37,7 +38,7 @@ export default function SettingsScreen() {
   }, [clearSpells, clearTrackers, onResetDialogDismiss, resetSpells, resetTrackers]);
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <LayoutContainer topInset>
       <ScrollView contentContainerStyle={{ paddingTop: Layout.padding * 4 }}>
         <Flex style={{ marginHorizontal: Layout.padding * 2 }}>
           <Text variant="titleLarge">App settings</Text>
@@ -136,6 +137,6 @@ export default function SettingsScreen() {
           </Dialog.Actions>
         </Dialog>
       </Portal>
-    </SafeAreaView>
+    </LayoutContainer>
   );
 }
