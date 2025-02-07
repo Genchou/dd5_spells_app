@@ -21,6 +21,7 @@ interface Store {
   addTracker: (tracker: Tracker) => void;
   resetTrackers: () => void;
   hideOlderSpells: boolean;
+  useNewRules: boolean;
 }
 
 export const store = observable<Store>({
@@ -52,6 +53,7 @@ export const store = observable<Store>({
   sourceColor: undefined,
   useDefaultTheme: true,
   hideOlderSpells: true,
+  useNewRules: true,
 });
 
 const persistOptions = configureSynced({

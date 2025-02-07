@@ -13,7 +13,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function SettingsScreen() {
   const theme = useAppTheme();
-  const { resetSpells, resetTrackers, hideOlderSpells } = use$(store);
+  const { resetSpells, resetTrackers, useNewRules } = use$(store);
   const [showThemeColors, setShowThemeColors] = useState(false);
   const [showResetWarning, setShowResetWarning] = useState(false);
   const [clearSpells, setClearSpells] = useState(false);
@@ -62,8 +62,8 @@ export default function SettingsScreen() {
         <Flex style={{ marginHorizontal: Layout.padding * 2 }}>
           <Text variant="titleLarge">App settings</Text>
           <Flex align="center" direction="row" justify="space-between" style={{ marginTop: Layout.padding }}>
-            <Text variant="titleSmall">Hide older spell version if{'\n'}a newer one exists.</Text>
-            <Switch value={hideOlderSpells} onValueChange={() => store.hideOlderSpells.set((prev) => !prev)} />
+            <Text variant="titleSmall">Use 2024 ruleset</Text>
+            <Switch value={useNewRules} onValueChange={() => store.useNewRules.set((prev) => !prev)} />
           </Flex>
         </Flex>
 

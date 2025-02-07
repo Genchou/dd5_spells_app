@@ -17,8 +17,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 export default function SpellsScreen() {
   const [showMenu, setShowMenu] = useState(false);
   const [search, setSearch] = useState<string>('');
-  const { prepareSpell, preparedSpells, selectedClass, hideOlderSpells } = use$(store);
-  const spells = useSpells(selectedClass, hideOlderSpells);
+  const { prepareSpell, preparedSpells, selectedClass, useNewRules } = use$(store);
+  const spells = useSpells(selectedClass, useNewRules);
 
   const listRef = useRef<FlashList<Spell | string>>(null);
 
