@@ -4,9 +4,10 @@ import { View } from '@/components/Themed';
 import { ThemeEditor } from '@/components/ThemeEditor';
 import { Layout } from '@/constants/Layout';
 import { store } from '@/state/store';
+import { checkForUpdate, getCurrentVersion, GITHUB_REPO } from '@/utils/update';
 import { use$ } from '@legendapp/state/react';
 import { useCallback, useState } from 'react';
-import { ScrollView, StyleSheet } from 'react-native';
+import { Linking, Platform, ScrollView, StyleSheet } from 'react-native';
 import { Button, Checkbox, Dialog, Portal, Snackbar, Switch, Text, TouchableRipple } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -18,6 +19,25 @@ export default function SettingsScreen() {
   const [clearSpells, setClearSpells] = useState(false);
   const [clearTrackers, setClearTrackers] = useState(false);
   const [snackbarText, setSnackbarText] = useState<string | undefined>(undefined);
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
+  const [nextUpdate, setNextUpdate] = useState<string>();
+
+  const onUpdatePress = useCallback(() => {
+    setShowUpdateModal(false);
+    Linking.openURL(`https://github.com/${GITHUB_REPO}/releases/latest`);
+  }, []);
+
+  const onCheckUpdate = useCallback(() => {
+    checkForUpdate().then((update) => {
+      if (update.needsUpdate) {
+        setShowUpdateModal(true);
+        const next = update.latestRelease.name;
+        setNextUpdate(next.substring(1));
+      } else {
+        setSnackbarText('Your app is up to date');
+      }
+    });
+  }, []);
 
   const onResetDialogDismiss = useCallback(() => {
     setShowResetWarning(false);
@@ -61,6 +81,25 @@ export default function SettingsScreen() {
               Clear data
             </Button>
           </Flex>
+
+          {Platform.OS === 'android' && (
+            <Flex style={{ paddingTop: Layout.padding }}>
+              <Button mode="contained-tonal" onPress={onCheckUpdate}>
+                Check for update
+              </Button>
+            </Flex>
+          )}
+        </Flex>
+
+        <Flex align="center" style={{ marginTop: Layout.padding, marginHorizontal: Layout.padding * 2 }}>
+          <Text
+            variant="bodySmall"
+            style={{
+              color: theme.colors.onBackground,
+            }}
+          >
+            App version: {getCurrentVersion()}
+          </Text>
         </Flex>
       </ScrollView>
 
@@ -105,7 +144,12 @@ export default function SettingsScreen() {
       </Portal>
 
       <Portal>
-        <Snackbar duration={2000} visible={!!snackbarText} onDismiss={() => setSnackbarText(undefined)}>
+        <Snackbar
+          duration={2000}
+          style={{ marginBottom: Layout.padding * 6 }}
+          visible={!!snackbarText}
+          onDismiss={() => setSnackbarText(undefined)}
+        >
           {snackbarText}
         </Snackbar>
       </Portal>
@@ -133,6 +177,24 @@ export default function SettingsScreen() {
             <Button disabled={!clearSpells && !clearTrackers} textColor={theme.colors.error} onPress={onResetData}>
               Reset
             </Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
+
+      <Portal>
+        <Dialog visible={showUpdateModal} onDismiss={() => setShowUpdateModal(false)}>
+          <Dialog.Content>
+            <Flex>
+              <Text variant="titleSmall">An update is available</Text>
+              <Flex style={{ paddingTop: Layout.padding }}>
+                <Text>Latest version: {nextUpdate}</Text>
+                <Text>Your version: {getCurrentVersion()}</Text>
+              </Flex>
+            </Flex>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button onPress={() => setShowUpdateModal(false)}>Cancel</Button>
+            <Button onPress={onUpdatePress}>Update</Button>
           </Dialog.Actions>
         </Dialog>
       </Portal>

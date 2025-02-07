@@ -15,6 +15,7 @@ import { useEffect } from 'react';
 import { useColorScheme } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { adaptNavigationTheme, MD3DarkTheme, MD3LightTheme } from 'react-native-paper';
+
 import 'react-native-reanimated';
 
 export {

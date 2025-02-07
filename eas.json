@@ -3,16 +3,19 @@
     "appVersionSource": "remote"
   },
   "build": {
-    "preview": {
-      "channel": "preview",
-      "distribution": "internal",
+    "oss": {
+      "env": {
+        "APP_VARIANT": "oss"
+      },
       "android": {
         "buildType": "apk"
       }
     },
     "production": {
-      "channel": "production",
-      "autoIncrement": true
+      "autoIncrement": true,
+      "env": {
+        "APP_VARIANT": "store"
+      }
     }
   }
 }
