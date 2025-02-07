@@ -1,14 +1,15 @@
+import { LayoutContainer } from '@/components/LayoutContainer';
+import { useAppTheme } from '@/components/Material3ThemeProvider';
 import { View } from '@/components/Themed';
 import { TrackerCard } from '@/components/TrackerCard';
 import { Layout } from '@/constants/Layout';
 import { store } from '@/state/store';
 import { Tracker } from '@/types/tracker.type';
 import { use$ } from '@legendapp/state/react';
-import { router } from 'expo-router';
+import { Link, router } from 'expo-router';
 import { useCallback } from 'react';
-import { Button, FAB } from 'react-native-paper';
+import { Button, FAB, Portal } from 'react-native-paper';
 import ReorderableList, { reorderItems } from 'react-native-reorderable-list';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function TrackersScreen() {
   const { trackers } = use$(store);
@@ -57,22 +58,20 @@ export default function TrackersScreen() {
     store.trackers.set((prev) => reorderItems(prev, from, to));
   }, []);
 
-  const renderItem = useCallback(
-    ({ item }: { item: Tracker; index: number }) => {
-      return (
-        <TrackerCard
-          tracker={item}
-          onDelete={() => store.trackers.set((prev) => prev.filter((t) => t.id !== item.id))}
-          onRestore={() => onRestore(item)}
-          onUse={() => onUse(item)}
-        />
-      );
-    },
-    [onRestore, onUse]
-  );
+  const renderItem = ({ item }: { item: Tracker; index: number }) => {
+    return (
+      <TrackerCard
+        tracker={item}
+        onDelete={() => store.trackers.set((prev) => prev.filter((t) => t.id !== item.id))}
+        onEdit={() => router.navigate({ pathname: '/trackers/edit/[id]', params: { id: item.id } })}
+        onRestore={() => onRestore(item)}
+        onUse={() => onUse(item)}
+      />
+    );
+  };
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <LayoutContainer topInset>
       <View
         style={{
           flexDirection: 'row',
@@ -103,11 +102,9 @@ export default function TrackersScreen() {
         onReorder={onReorder}
       />
 
-      <FAB
-        icon="plus"
-        style={{ position: 'absolute', bottom: Layout.padding, right: Layout.padding }}
-        onPress={() => router.navigate('/new-tracker')}
-      />
-    </SafeAreaView>
+      <Link asChild href="/trackers/new">
+        <FAB icon="plus" style={{ position: 'absolute', bottom: Layout.padding, right: Layout.padding }} />
+      </Link>
+    </LayoutContainer>
   );
 }

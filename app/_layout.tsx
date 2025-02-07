@@ -85,7 +85,8 @@ export default function RootLayout() {
               presentation: 'modal',
             }}
           />
-          <Stack.Screen name="new-tracker" options={{ title: 'New tracker', presentation: 'modal' }} />
+          <Stack.Screen name="trackers/new" options={{ title: 'New tracker', presentation: 'modal' }} />
+          <Stack.Screen name="trackers/edit/[id]" options={{ title: 'Edit tracker', presentation: 'modal' }} />
         </Stack>
         <StatusBar
           backgroundColor={theme[colorScheme ?? 'light'].background}

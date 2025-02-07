@@ -19,6 +19,7 @@ interface Store {
   useDefaultTheme: boolean;
   trackers: Tracker[];
   addTracker: (tracker: Tracker) => void;
+  modifyTracker: (tracker: Tracker) => void;
   resetTrackers: () => void;
   hideOlderSpells: boolean;
 }
@@ -47,6 +48,10 @@ export const store = observable<Store>({
   addTracker: (tracker: Tracker) => {
     const trackers = store.trackers.get();
     store.trackers.set([...trackers, tracker]);
+  },
+  modifyTracker: (tracker: Tracker) => {
+    const trackers = store.trackers.get();
+    store.trackers.set(trackers.map((t) => (t.id === tracker.id ? tracker : t)));
   },
   resetTrackers: () => store.trackers.set([]),
   sourceColor: undefined,

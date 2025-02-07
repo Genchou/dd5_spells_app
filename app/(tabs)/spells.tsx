@@ -1,3 +1,4 @@
+import { LayoutContainer } from '@/components/LayoutContainer';
 import { SpellList } from '@/components/SpellList';
 import { View } from '@/components/Themed';
 import { Layout } from '@/constants/Layout';
@@ -12,7 +13,6 @@ import { impactAsync, ImpactFeedbackStyle } from 'expo-haptics';
 import { router } from 'expo-router';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { Button, Menu, Searchbar, Text } from 'react-native-paper';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function SpellsScreen() {
   const [showMenu, setShowMenu] = useState(false);
@@ -82,11 +82,7 @@ export default function SpellsScreen() {
   }, []);
 
   return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-      }}
-    >
+    <LayoutContainer topInset>
       <View
         style={{
           flexDirection: 'row',
@@ -144,6 +140,6 @@ export default function SpellsScreen() {
         onSpellLongPress={onSpellLongPress}
         onSpellPress={onSpellPress}
       />
-    </SafeAreaView>
+    </LayoutContainer>
   );
 }
