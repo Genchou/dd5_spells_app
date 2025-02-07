@@ -9,7 +9,6 @@ import { use$ } from '@legendapp/state/react';
 import { useCallback, useState } from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
 import { Button, Checkbox, Dialog, Portal, Snackbar, Switch, Text, TouchableRipple } from 'react-native-paper';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function SettingsScreen() {
   const theme = useAppTheme();

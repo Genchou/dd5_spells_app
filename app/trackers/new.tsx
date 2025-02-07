@@ -1,16 +1,9 @@
-import { View } from '@/components/Themed';
-import { Layout } from '@/constants/Layout';
-import { store } from '@/state/store';
-import { Tracker } from '@/types/tracker.type';
-import { use$ } from '@legendapp/state/react';
-import { router } from 'expo-router';
-import { useState } from 'react';
-import { KeyboardAvoidingView } from 'react-native';
-import { Button, HelperText, SegmentedButtons, Text, TextInput } from 'react-native-paper';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { randomUUID } from 'expo-crypto';
-import { CreateTrackerDTO, TrackerForm } from '@/components/TrackerForm';
 import { LayoutContainer } from '@/components/LayoutContainer';
+import { CreateTrackerDTO, TrackerForm } from '@/components/TrackerForm';
+import { store } from '@/state/store';
+import { use$ } from '@legendapp/state/react';
+import { randomUUID } from 'expo-crypto';
+import { router } from 'expo-router';
 
 export default function NewTrackerScreen() {
   const { addTracker } = use$(store);
