@@ -4,7 +4,7 @@ module.exports = {
   expo: {
     name: 'Dæëndé',
     slug: 'dd5_spells',
-    version: '1.1.2',
+    version: '1.1.3',
     orientation: 'portrait',
     icon: './assets/images/whatever.png',
     scheme: 'myapp',
